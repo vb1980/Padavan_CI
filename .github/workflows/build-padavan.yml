@@ -180,7 +180,7 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
-    - name: 删除上传在github空间的老固件
+    - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
       with:
@@ -191,8 +191,5 @@ jobs:
       if: steps.organize.outputs.status == 'success' && env.SERVERCHAN_NOTIFICATION == 'true'
       with:
         SCKEY: ${{ secrets.SCKEY }}
-        text: ${TARGET_NAME}_Build_Completed
-        desp: Congratulations,
-                Your ${TARGET_NAME} padavan firmware build completed!
-                CowTransfer Download Url：${{ env.COWTRANSFER_URL }}
-                Enjoy it!
+        text: ${{ env.TARGET_NAME }}_Build_Completed
+        desp: Congratulations,<br>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br>&nbsp;&nbsp;CowTransfer Download Url：c${{ env.COWTRANSFER_URL }}**<br>&nbsp;&nbsp;Enjoy it!
