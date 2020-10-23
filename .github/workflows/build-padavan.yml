@@ -192,4 +192,16 @@ jobs:
       with:
         SCKEY: ${{ secrets.SCKEY }}
         text: ${{ env.TARGET_NAME }}_Build_Completed
-        desp: Congratulations,<br>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br>&nbsp;&nbsp;CowTransfer Download Url：c${{ env.COWTRANSFER_URL }}**<br>&nbsp;&nbsp;Enjoy it!
+        desp: Congratulations,
+              
+              
+              Your **${{ env.TARGET_NAME }}** padavan firmware build completed!
+              
+              
+              🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}
+              
+              
+              Enjoy it🎈🎁!
+              
+              
+              
