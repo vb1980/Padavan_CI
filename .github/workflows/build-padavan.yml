@@ -63,8 +63,8 @@ jobs:
     - name: Set golang
       run: |
         cd /opt/hostedtoolcache/go
-        rm -rf /opt/hostedtoolcache/go/1.14.12
-        mv 1.15.5 1.14.12
+        rm -rf /opt/hostedtoolcache/go/1.14.13
+        mv 1.15.6 1.14.13
     - name: Apply rainbow themes
       if: env.APPLY_RAINBOWTHEME == 'true'
       run: |
