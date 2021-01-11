@@ -25,6 +25,7 @@ env:
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
   APPLY_RAINBOWTHEME: true
+  APPLY_MobileCompatible: false
   RECOVERY_SSPBINREMOTEDOWNLOAD: false
   BUILD_OWNER: vb1980
   UPLOAD_COWTRANSFER: true
@@ -68,6 +69,12 @@ jobs:
         mkdir -p n56u_rainbow
         tar -xvf rainbowthemes.tar.xz -C n56u_rainbow
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
+    - name: Apply mobile compatible
+      if: env.APPLY_RAINBOWTHEME == 'false' && env.APPLY_MobileCompatible == 'true'
+      run: |
+        cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
+        cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
+        cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
     - name: Recovery SSP bin files download from remote
       if: env.RECOVERY_SSPBINREMOTEDOWNLOAD == 'true'
       run: |
