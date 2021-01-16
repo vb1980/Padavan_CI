@@ -1,4 +1,4 @@
-name: Build K2Pv5
+name: Build K2Pv5 Rainbow
 
 on:
   workflow_dispatch:
@@ -24,8 +24,8 @@ env:
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  APPLY_RAINBOWTHEME: false
-  APPLY_MobileCompatible: true
+  APPLY_RAINBOWTHEME: true
+  APPLY_MobileCompatible: false
   RECOVERY_SSPBINREMOTEDOWNLOAD: true
   BUILD_OWNER: vb1980
   UPLOAD_COWTRANSFER: true
