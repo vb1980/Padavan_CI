@@ -508,6 +508,10 @@ textarea[readonly] {
     border-radius: 4px 4px 0px 4px;
 }
 
+.syslog_panel.open {
+    padding: 5px;
+}
+
 .syslog_panel div.log_text {
     text-align: center;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
