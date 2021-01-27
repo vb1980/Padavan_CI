@@ -26,6 +26,7 @@ env:
   FIRMWARE_PATH: /opt/firmwares
   APPLY_RAINBOWTHEME: true
   APPLY_MobileCompatible: false
+  APPLY_SpecializedLogo: true
   RECOVERY_SSPBINREMOTEDOWNLOAD: false
   BUILD_OWNER: vb1980
   UPLOAD_COWTRANSFER: true
@@ -75,6 +76,20 @@ jobs:
         cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
         cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
+    - name: Apply specialized logo
+      if: env.APPLY_SpecializedLogo == 'true'
+      run: |
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
+        if [ "${APPLY_RAINBOWTHEME}" = "true" ]
+        then
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_green.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_orange.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_purple.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
+        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
+        fi
     - name: Copy A-040W-Q configs
       run: |
         cp -f a040wq/A-040W-Q_configs.tar.xz $WORK_PATH/trunk
