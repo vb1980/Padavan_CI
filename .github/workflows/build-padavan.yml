@@ -64,9 +64,10 @@ jobs:
         sed -i "s#V2ray_URL := https://codeload.github.com/v2ray/v2ray-core/tar.gz/v\$(V2ray_VERSION)#V2ray_URL := https://codeload.github.com/v2fly/v2ray-core/tar.gz/v\$(V2ray_VERSION)#g" ./Makefile
     - name: Set golang
       run: |
-        cd /opt/hostedtoolcache/go
-        rm -rf /opt/hostedtoolcache/go/1.14.14
-        mv 1.15.7 1.14.14
+        cp -f bashScripts/updateGo.sh $WORK_PATH
+        cd $WORK_PATH
+        sudo chmod +x ./updateGo.sh
+        bash ./updateGo.sh
     - name: Apply rainbow themes
       if: env.APPLY_RAINBOWTHEME == 'true'
       run: |
