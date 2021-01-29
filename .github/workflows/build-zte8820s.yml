@@ -58,9 +58,10 @@ jobs:
         tar -xvf mipsel-linux-uclibc.tar.xz -C toolchain-3.4.x
     - name: Set golang
       run: |
-        cd /opt/hostedtoolcache/go
-        rm -rf /opt/hostedtoolcache/go/1.14.13
-        mv 1.15.6 1.14.13
+        cp -f bashScripts/updateGo.sh $WORK_PATH
+        cd $WORK_PATH
+        sudo chmod +x ./updateGo.sh
+        bash ./updateGo.sh
     - name: Apply rainbow themes
       if: env.APPLY_RAINBOWTHEME == 'true'
       run: |
