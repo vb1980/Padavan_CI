@@ -24,8 +24,8 @@ env:
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  APPLY_RAINBOWTHEME: true
-  APPLY_MobileCompatible: false
+  APPLY_RAINBOWTHEME: false
+  APPLY_MobileCompatible: true
   APPLY_SpecializedLogo: true
   RECOVERY_SSPBINREMOTEDOWNLOAD: false
   Remove_RSSI: true
