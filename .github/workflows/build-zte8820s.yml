@@ -24,11 +24,10 @@ env:
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  APPLY_RAINBOWTHEME: false
-  APPLY_MobileCompatible: true
+  APPLY_RAINBOWTHEME: true
+  APPLY_MobileCompatible: false
   APPLY_SpecializedLogo: true
   RECOVERY_SSPBINREMOTEDOWNLOAD: false
-  Remove_RSSI: true
   BUILD_OWNER: vb1980
   UPLOAD_COWTRANSFER: true
   UPLOAD_WETRANSFER: false
@@ -108,19 +107,6 @@ jobs:
         cd $WORK_PATH/trunk/user/shared
         sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/trojan#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/ssp/trojan#g" ./defaults.c
         sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/v2ray#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/ssp/v2ray#g" ./defaults.c
-    - name: Remove RSSI
-      if: env.Remove_RSSI == 'true'
-      run: |
-        cp -f removeRSSI/ralink.c $WORK_PATH/trunk/user/httpd
-        cp -f removeRSSI/Advanced_ACL2g_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_ACL_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_DHCP_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_Exposed_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_MACFilter_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_URLFilter_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/Advanced_VirtualServer_Content.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/client_function.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f removeRSSI/clients.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/device-map
     - name: Update latest adg
       run: |
         cd $WORK_PATH/trunk/user/adguardhome

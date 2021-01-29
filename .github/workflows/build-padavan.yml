@@ -27,7 +27,7 @@ env:
   APPLY_RAINBOWTHEME: false
   APPLY_MobileCompatible: true
   RECOVERY_SSPBINREMOTEDOWNLOAD: false
-  Remove_RSSI: true
+  Remove_RSSI: false
   BUILD_OWNER: vb1980
   UPLOAD_COWTRANSFER: true
   UPLOAD_WETRANSFER: false
