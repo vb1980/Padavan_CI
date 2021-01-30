@@ -1556,6 +1556,7 @@ var w_dnsf = '<% nvram_get_x("", "w_dnsf"); %>';
 var w_ss = '<% nvram_get_x("", "w_ss"); %>';
 var w_men = '<% nvram_get_x("", "w_men"); %>';
 var w_adbyby = '<% nvram_get_x("", "w_adbyby"); %>';
+var w_pdnsd = '<% nvram_get_x("", "w_pdnsd"); %>';
 
 jQuery.each(menuL1, function (i, m) {
 	var hidden = false;
