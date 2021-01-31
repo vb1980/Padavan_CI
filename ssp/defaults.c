@@ -221,11 +221,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_ldpc", "2" },
 	{ "wl_HT_RDG", "0" },
 #if defined (USE_WID_5G) && USE_WID_5G==7615
-#if defined (BOARD_MT7615_DBDC)
-	{ "wl_HT_AMSDU", "0" },
-#else
 	{ "wl_HT_AMSDU", "1" },
-#endif
 #else
 	{ "wl_HT_AMSDU", "0" },
 #endif
@@ -266,6 +262,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_sta_auto", "0" },
 #endif
 
+#if BOARD_HAS_2G_RADIO
 	/* 2G Wireless parameters */
 	{ "rt_country_code", DEF_WLAN_2G_CC },
 	{ "rt_ssid", DEF_WLAN_2G_SSID },
@@ -362,6 +359,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_sta_wpa_psk", "" },
 	{ "rt_sta_wisp", "0" },
 	{ "rt_sta_auto", "0" },
+#endif
 
 	// USB related
 	{ "acc_num", "0" },
@@ -419,9 +417,9 @@ struct nvram_pair router_defaults[] = {
 	{ "koolproxy_cpu", "0"},
 	{ "koolproxy_prot", "0"},
 	{ "rules_list", "0"},
-	{ "koolproxy_txt_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/koolproxy.txt"},
-	{ "daily_txt_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/daily.txt"},
-	{ "kp_dat_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/kp.dat"},
+	{ "koolproxy_txt_0", "https://cdn.jsdelivr.net/gh/houzi-/CDN/koolproxy.txt"},
+	{ "daily_txt_0", "https://cdn.jsdelivr.net/gh/houzi-/CDN/daily.txt"},
+	{ "kp_dat_0", "https://cdn.jsdelivr.net/gh/houzi-/CDN/kp.dat"},
 	{ "koolproxy_txt_1", "https://gitee.com/bkye/kp/raw/master/mrules/koolproxy.txt"},
 	{ "daily_txt_1", "https://gitee.com/bkye/kp/raw/master/mrules/daily.txt"},
 	{ "kp_dat_1", "https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/kp.dat"},
@@ -449,7 +447,7 @@ struct nvram_pair router_defaults[] = {
 	{ "block_ios", "0" },
 	{ "block_douyin", "0" },
 	{ "anti_ad", "0" },
-	{ "anti_ad_link", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf" },
+	{ "anti_ad_link", "https://anti-ad.net/anti-ad-for-dnsmasq.conf" },
 	{ "anti_ad_count", "0" },
 	/* Pdnsd */
 	{ "dns_enable", "0" },
@@ -570,7 +568,8 @@ struct nvram_pair router_defaults[] = {
 	{ "dr_staticipaddr_x", "" },
 	{ "dr_staticnetmask_x", "0" },
 	{ "dr_staticgateway_x", "" },
-	
+
+#if defined(APP_SCUT)
 	/* scutclient related */
 	{ "scutclient_enable", "0" },
 	{ "scutclient_debug", "0" },
@@ -583,7 +582,9 @@ struct nvram_pair router_defaults[] = {
 	{ "scutclient_password", "" },
 	{ "scutclient_watchcat", "1" },
 	{ "scutclient_wdg_force", "1" },
+#endif
 
+#if defined(APP_MENTOHUST)
 	/* mentohust related */
 	{ "mentohust_enable", "0" },
 	{ "mentohust_username", "" },
@@ -605,23 +606,31 @@ struct nvram_pair router_defaults[] = {
 	{ "mentohust_ver", "0.00" },
 	{ "mentohust_datafile", "/etc/storage/mentohust/" },
 	{ "mentohust_dhcpscript", "" },
+#endif
 
+#if defined(APP_TTYD)
 	/* ttyd related */
 	{ "ttyd_enable", "0" },
 	{ "ttyd_port", "7681" },
 
 	/* NAPT66 */
 	{ "napt66_enable", "0" },
-	
+#endif
+
+#if defined(APP_VLMCSD)
 	/* vlmcsd */
 	{ "vlmcsd_enable", "0" },
+#endif
 
+#if defined(APP_DNSFORWARDER)
 	/* dns-forwarder */
 	{ "dns_forwarder_enable", "0" },
 	{ "dns_forwarder_port", "5353" },
 	{ "dns_forwarder_bind", "0.0.0.0" },
 	{ "dns_forwarder_server", "8.8.4.4:53" },
-	
+#endif
+
+#if defined(APP_SHADOWSOCKS)
 	/* shadowsocks */
 	{ "ss_type", "0" },
 	{ "global_server", "nil" },
@@ -797,6 +806,11 @@ struct nvram_pair router_defaults[] = {
 	{ "zerotier_secret", "" },
 	{ "zero_staticnum_x", "0" },
 
+	{ "ss_watchcat", "1" },
+	{ "ss_update_chnroute", "0" },
+	{ "ss_update_gfwlist", "0" },
+#endif
+
 	/* DHCP server parameters */
 	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
 	{ "dhcp_end", DEF_LAN_DHCP_END },	/* Last assignable DHCP address */
@@ -867,9 +881,10 @@ struct nvram_pair router_defaults[] = {
 	{ "force_mld", "0" },
 	{ "udpxy_enable_x", "0" },
 	{ "udpxy_clients", "10" },
+#if defined(APP_XUPNPD)
 	{ "xupnpd_enable_x", "0" },
 	{ "xupnpd_udpxy", "0" },
-
+#endif
 	{ "rstats_enable", "1" },
 	{ "rstats_stored", "1" },
 	{ "stime_stored", "1" },
@@ -992,7 +1007,9 @@ struct nvram_pair router_defaults[] = {
 	{ "hw_nat_mode", "1" },
 #endif
 	{ "sw_nat_mode", "0" },
+#if defined(USE_SFE)
 	{ "sfe_enable", "0" },
+#endif
 	{ "fw_syn_cook", "0" },
 	{ "fw_mac_drop", "0" },
 	{ "nf_nat_type", "2" },
@@ -1061,6 +1078,7 @@ struct nvram_pair router_defaults[] = {
 	{ "vpnc_ov_clzo", "2" },
 	{ "vpnc_ov_atls", "0" },
 
+#if defined(APP_XTU)
 	/* xTun */
 	{ "xTun_iface", "tun0" },
 	{ "xTun_cidr", "10.0.1.2/24" },
@@ -1071,6 +1089,7 @@ struct nvram_pair router_defaults[] = {
 
 	{ "xTun_dns", "1.1.1.1" },
 	{ "xTun_black_list", "/etc/storage/xTun_black_list" },
+#endif
 
 	{ 0, 0 }
 };

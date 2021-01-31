@@ -1670,6 +1670,8 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																</option>
 																<option value="1.1.1.1#53">Cloudflare DNS (1.1.1.1)
 																</option>
+																<option value="1.0.0.1#53">Cloudflare DNS (1.0.0.1)
+																</option>
 																<option value="114.114.114.114#53">Oversea Mode DNS-1
 																	(114.114.114.114)</option>
 																<option value="114.114.115.115#53">Oversea Mode DNS-1
