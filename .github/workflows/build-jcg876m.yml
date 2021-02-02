@@ -94,8 +94,12 @@ jobs:
         sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/v2ray#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/ssp/v2ray#g" ./defaults.c
     - name: Update latest adg
       run: |
-        cd $WORK_PATH/trunk/user/adguardhome
-        sed -i "s#https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/adg/AdGuardHome#g" ./adguardhome.sh
+        cp -f adg/adguardhome.sh $WORK_PATH/trunk/user/adguardhome
+        cp -f adg/defaults.c $WORK_PATH/trunk/user/shared
+        cp -f adg/variables.c $WORK_PATH//trunk/user/httpd
+        cp -f adg/Advanced_adguardhome.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
+        #cd $WORK_PATH/trunk/user/adguardhome
+        #sed -i "s#https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/adg/AdGuardHome#g" ./adguardhome.sh
     - name: Update latest v2ray
       run: |
         cp -f v2ray/v2ray-core-4.34.0.tar.gz $WORK_PATH/trunk/user/v2ray

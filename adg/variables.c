@@ -745,7 +745,7 @@
 #if defined(APP_ALIDDNS)
 			{"aliddns_enable", "", NULL, EVM_RESTART_ALIDDNS },
 			{"aliddns_interval", "", NULL, EVM_RESTART_ALIDDNS },
-            {"aliddns_ttl", "", NULL, EVM_RESTART_ALIDDNS },
+			{"aliddns_ttl", "", NULL, EVM_RESTART_ALIDDNS },
 			{"aliddns_ak", "", NULL, EVM_RESTART_ALIDDNS },
 			{"aliddns_sk", "", NULL, EVM_RESTART_ALIDDNS },
 			{"aliddns_name", "", NULL, EVM_RESTART_ALIDDNS },
@@ -1000,15 +1000,15 @@
 			{"v2_link","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"global_server","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"backup_server","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"udp_relay_server","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"ss_threads","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"ss_run_mode","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"pdnsd_enable","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"udp_relay_server","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_threads","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_run_mode","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"pdnsd_enable","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"s_dports","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"china_dns","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"tunnel_forward","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"tunnel_forward","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ssp_dns_ip","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"ssp_dns_port","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ssp_dns_port","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_list","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"d_server","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"d_port","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1062,9 +1062,9 @@
 			{"ss_turn","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"lan_con","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_chnroute_url","",NULL, FALSE},
-	        	{"ss_watchcat", "",NULL, FALSE},
-	        	{"ss_turn_s","",NULL, EVM_RESTART_SHADOWSOCKS},
-	        	{"ss_turn_ss","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_watchcat", "",NULL, FALSE},
+			{"ss_turn_s","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_turn_ss","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_keyword","",NULL, FALSE},
 			{"ss_update_chnroute","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_update_gfwlist","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1113,8 +1113,8 @@
     struct variable variables_AdguardHomeConf[] = {
 			{"adg_enable", "", NULL, EVM_RESTART_ADGUARDHOME},
 			{"adg_redirect", "", NULL, EVM_RESTART_ADGUARDHOME},
-	    	{"adg_local", "", NULL, EVM_RESTART_ADGUARDHOME},
-	    	{"adg_link", "", NULL, EVM_RESTART_ADGUARDHOME},
+			{"adg_local", "", NULL, EVM_RESTART_ADGUARDHOME},
+			{"adg_link", "", NULL, EVM_RESTART_ADGUARDHOME},
 			{0,0,0,0}
 	};
 #endif
@@ -1152,7 +1152,7 @@
 
 #if defined(APP_SMARTDNS)
     struct variable variables_SmartdnsConf[] = {
-	        {"sdns_enable", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_enable", "", NULL, EVM_RESTART_SMARTDNS},
 			{"snds_name", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_tcp_server", "", NULL, EVM_RESTART_SMARTDNS},
@@ -1191,7 +1191,7 @@
 #endif
 
     struct variable variables_DwebConf[] = {
-	        {"w_ai", "", NULL, FALSE},
+			{"w_ai", "", NULL, FALSE},
 			{"w_vpn_s", "", NULL, FALSE},
 			{"w_vpn_c", "", NULL, FALSE},
 			{"w_wnet", "", NULL, FALSE},
