@@ -152,15 +152,9 @@ function done_validating(action){
 											</td>
 										</tr>
 										<tr>
-											<th width="30%" style="border-top: 0 none;">本地adg路径:</th>
-											<td>
-												<input type="text" class="input" size="60" name="adg_local" value="<% nvram_get_x("","adg_local"); %>" />
-											</td>
-										</tr>
-										<tr>
 											<th width="30%" style="border-top: 0 none;">adg网络地址:</th>
 											<td>
-												<input type="text" class="input" size="60" name="adg_link" value="<% nvram_get_x("","adg_link"); %>" />
+												<input type="text" class="input" size="120" name="adg_link" value="<% nvram_get_x("","adg_link"); %>" />
 											</td>
 										</tr>
                                          					<tr>

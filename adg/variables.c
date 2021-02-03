@@ -1113,7 +1113,6 @@
     struct variable variables_AdguardHomeConf[] = {
 			{"adg_enable", "", NULL, EVM_RESTART_ADGUARDHOME},
 			{"adg_redirect", "", NULL, EVM_RESTART_ADGUARDHOME},
-			{"adg_local", "", NULL, EVM_RESTART_ADGUARDHOME},
 			{"adg_link", "", NULL, EVM_RESTART_ADGUARDHOME},
 			{0,0,0,0}
 	};
