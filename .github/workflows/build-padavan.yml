@@ -108,7 +108,7 @@ jobs:
         cp -f removeRSSI/clients.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/device-map
     - name: Update latest adg
       run: |
-	cp -f adg/adguardhome.sh $WORK_PATH/trunk/user/adguardhome
+        cp -f adg/adguardhome.sh $WORK_PATH/trunk/user/adguardhome
         cp -f adg/defaults.c $WORK_PATH/trunk/user/shared
         cp -f adg/variables.c $WORK_PATH//trunk/user/httpd
         cp -f adg/Advanced_adguardhome.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
