@@ -1,4 +1,4 @@
-name: Build ZTE8820S
+name: Build ZTE-E8820S
 
 on: 
   workflow_dispatch:
@@ -58,9 +58,10 @@ jobs:
         tar -xvf mipsel-linux-uclibc.tar.xz -C toolchain-3.4.x
     - name: Set golang
       run: |
-        cp -f bashScripts/updateGo.sh /opt
-        sudo chmod +x /opt/updateGo.sh
-        bash /opt/updateGo.sh
+        cp -f bashScripts/updateGo.sh $WORK_PATH
+        cd $WORK_PATH
+        sudo chmod +x ./updateGo.sh
+        bash ./updateGo.sh
     - name: Apply rainbow themes
       if: env.APPLY_RAINBOWTHEME == 'true'
       run: |
