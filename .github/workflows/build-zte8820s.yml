@@ -7,31 +7,56 @@ on:
         description: 'Build_ChongshengB_Padavan'
         required: true
         default: 'build'
-  release:
-    types: [published]
-  push:
-    tags:
-    - 'v*'
-  watch:
-    types: [started]
+      firmwarever:
+        description: 'firmware''s version'
+        required: true
+        default: '20201015'
+      rainbowui:
+        description: 'whether to apply rainbow ui'
+        required: true
+        default: 'true'
+      mobileui:
+        description: 'whether to apply mobile ui patch for original ui'
+        required: true
+        default: 'false'
+      specializedlogo:
+        description: 'whether to apply specialized logo for e8820s'
+        required: true
+        default: 'true'
+      ssp:
+        description: 'whether to apply the patch for download ssp bin from local or remote url'
+        required: true
+        default: 'false'
+      uploadcow:
+        description: 'whether to upload firmware to cowtransfer'
+        required: true
+        default: 'true'
+      uploadwet:
+        description: 'whether to upload firmware to wettransfer'
+        required: true
+        default: 'false'
+      serverchan:
+        description: 'whether to notify through serverchan'
+        required: true
+        default: 'true'
 env:
   REPOSITORY_URL: https://github.com/chongshengB/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: ZTE_E8820s
-  FIRMWARE_VERSION: 20210131
+  #FIRMWARE_VERSION: 20210131
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  APPLY_RAINBOWTHEME: true
-  APPLY_MobileCompatible: false
-  APPLY_SpecializedLogo: true
-  RECOVERY_SSPBINREMOTEDOWNLOAD: false
-  BUILD_OWNER: vb1980
-  UPLOAD_COWTRANSFER: true
-  UPLOAD_WETRANSFER: false
-  SERVERCHAN_NOTIFICATION: true
+  #APPLY_RAINBOWTHEME: true
+  #APPLY_MobileCompatible: false
+  #APPLY_SpecializedLogo: true
+  #RECOVERY_SSPBINREMOTEDOWNLOAD: false
+  #BUILD_OWNER: vb1980
+  #UPLOAD_COWTRANSFER: true
+  #UPLOAD_WETRANSFER: false
+  #SERVERCHAN_NOTIFICATION: true
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -62,7 +87,7 @@ jobs:
         sudo chmod 777 ./go.sh
         bash ./go.sh
     - name: Apply rainbow themes
-      if: env.APPLY_RAINBOWTHEME == 'true'
+      if: github.event.inputs.rainbowui == 'true'
       run: |
         cp -f rainbow/rainbowthemes.tar.xz $WORK_PATH/trunk/user/www
         cd $WORK_PATH/trunk/user/www
@@ -71,16 +96,16 @@ jobs:
         tar -xvf rainbowthemes.tar.xz -C n56u_rainbow
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
     - name: Apply mobile compatible
-      if: env.APPLY_RAINBOWTHEME == 'false' && env.APPLY_MobileCompatible == 'true'
+      if: github.event.inputs.rainbowui == 'false' && github.event.inputs.mobileui == 'true'
       run: |
         cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
         cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
     - name: Apply specialized logo
-      if: env.APPLY_SpecializedLogo == 'true'
+      if: github.event.inputs.specializedlogo == 'true'
       run: |
         cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
-        if [ "${APPLY_RAINBOWTHEME}" = "true" ]
+        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]
         then
         cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
         cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
@@ -97,15 +122,15 @@ jobs:
         sudo chmod +x ./ZTE-E8820s_configs.tar.xz
         tar -xvf ZTE-E8820s_configs.tar.xz
     - name: Recovery SSP bin files download from remote
-      if: env.RECOVERY_SSPBINREMOTEDOWNLOAD == 'true'
+      if: github.event.inputs.ssp == 'true'
       run: |
         cp -f ssp/shadowsocks.sh $WORK_PATH/trunk/user/shadowsocks/scripts
         cp -f ssp/defaults.c $WORK_PATH/trunk/user/shared
         cp -f ssp/variables.c $WORK_PATH//trunk/user/httpd
         cp -f ssp/Shadowsocks.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cd $WORK_PATH/trunk/user/shared
-        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/trojan#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/ssp/trojan#g" ./defaults.c
-        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/v2ray#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/ssp/v2ray#g" ./defaults.c
+        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/trojan#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/ssp/trojan#g" ./defaults.c
+        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/v2ray#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/ssp/v2ray#g" ./defaults.c
     - name: Update latest adg
       run: |
         cp -f adg/adguardhome.sh $WORK_PATH/trunk/user/adguardhome
@@ -113,7 +138,7 @@ jobs:
         cp -f adg/variables.c $WORK_PATH//trunk/user/httpd
         cp -f adg/Advanced_adguardhome.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         #cd $WORK_PATH/trunk/user/adguardhome
-        #sed -i "s#https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome#https://cdn.jsdelivr.net/gh/${BUILD_OWNER}/Padavan_CI/adg/AdGuardHome#g" ./adguardhome.sh
+        #sed -i "s#https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/adg/AdGuardHome#g" ./adguardhome.sh
     - name: Update latest v2ray
       run: |
         cp -f v2ray/v2ray-core-4.34.0.tar.gz $WORK_PATH/trunk/user/v2ray
@@ -207,7 +232,7 @@ jobs:
         #格式如下：
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
-        sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${FIRMWARE_VERSION}/g" ./versions.inc
+        sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
         echo '更新版本号时间'
         #########################################################################################
     - name: Build firmware
@@ -222,7 +247,7 @@ jobs:
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk
         rainbow_Prefix=""
-        if [ "${APPLY_RAINBOWTHEME}" = "true" ]
+        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]
         then
         rainbow_Prefix="rainbow_"
         fi
@@ -240,14 +265,14 @@ jobs:
         name: Padavan-packages
         path: ${{ env.FIRMWARE }}
     - name: Upload firmware to cowtransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true'
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
         echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
         echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true'
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -255,13 +280,13 @@ jobs:
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
+      if: steps.organizer.outputs.status == 'success'
       with:
         age: '1 day'
         skip-recent: 5
     - name: ServerChan Notification
       uses: emon100/Action-Serverchan@master
-      if: steps.organize.outputs.status == 'success' && env.SERVERCHAN_NOTIFICATION == 'true'
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.serverchan == 'true'
       with:
         SCKEY: ${{ secrets.SCKEY }}
         text: ${{ env.TARGET_NAME }}_Build_Completed
