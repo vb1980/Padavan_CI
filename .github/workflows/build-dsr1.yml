@@ -19,10 +19,6 @@ on:
         description: 'whether to apply mobile ui patch for original ui'
         required: true
         default: 'false'
-      specializedlogo:
-        description: 'whether to apply specialized logo for e8820s'
-        required: true
-        default: 'true'
       ssp:
         description: 'whether to apply the patch for download ssp bin from local or remote url'
         required: true
