@@ -13,5 +13,7 @@ new_ver=`sed -n '1p' $goVersions`
 old_ver=`sed -n '2p' $goVersions`
 echo "rm -rf $goCacheRootDir/$old_ver"
 rm -rf $goCacheRootDir/$old_ver
-echo "mv $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver"
-mv $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver
+#echo "mv $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver"
+#mv $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver
+echo "cp -f $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver"
+cp -f $goCacheRootDir/$new_ver $goCacheRootDir/$old_ver
