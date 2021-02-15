@@ -64,11 +64,6 @@ jobs:
         mkdir -p toolchain-3.4.x
         wget $TOOLCHAIN_URL
         tar -xvf mipsel-linux-uclibc.tar.xz -C toolchain-3.4.x
-    - name: Set golang
-      run: |
-        cp -f bashScripts/go.sh $(pwd)
-        sudo chmod 777 ./go.sh
-        #bash ./go.sh
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
