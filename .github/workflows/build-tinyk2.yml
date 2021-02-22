@@ -216,8 +216,8 @@ jobs:
     - name: Upload firmware to cowtransfer
       if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
       run: |
-        curl -sL https://git.io/cowtransfer | sh
-        ./cowtransfer-uploader -s -p 16 --hash ${FIRMWARE} 2>&1 | tee cowtransfer.log
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
         echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
         echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Upload firmware to WeTransfer
