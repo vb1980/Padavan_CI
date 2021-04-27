@@ -7,6 +7,10 @@ on:
         description: 'Build_vb1980_Padavan'
         required: true
         default: 'build'
+      branch:
+        description: 'padavan git branch'
+        required: true
+        default: ''
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -59,7 +63,12 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
+        if [ "${{ github.event.inputs.branch }}" = "" ]
+        then
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        else
+        git clone -b ${{ github.event.inputs.branch }} --depth=1 $REPOSITORY_URL $WORK_PATH
+        fi
         cd $WORK_PATH/toolchain-mipsel
         mkdir -p toolchain-3.4.x
         wget $TOOLCHAIN_URL
