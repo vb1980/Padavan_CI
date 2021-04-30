@@ -136,6 +136,7 @@ jobs:
         sed -i '/CONFIG_FIRMWARE_INCLUDE_IPT2SOCKS/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MICROSOCKS/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_OPENVPN/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SERVERCHAN/d' .config
         #校园网相关开始
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #删除配置项MENTOHUST
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #删除配置项SCUTCLIENT
@@ -185,6 +186,8 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_WYYBIN=n" >> .config #网易云解锁GO版本执行文件（4M多）注意固件超大小,不集成会自动下载
         #
         echo "CONFIG_FIRMWARE_INCLUDE_OPENVPN=y" >> .config #openvpn
+        #
+        echo "CONFIG_FIRMWARE_INCLUDE_SERVERCHAN=y" >> .config #serverchan
         #校园网相关开始
         echo "CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n" >> .config #MENTOHUST
         echo "CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n" >> .config #SCUTCLIENT
