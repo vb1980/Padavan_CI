@@ -23,10 +23,6 @@ on:
         description: 'whether to apply specialized logo for e8820s'
         required: true
         default: 'true'
-      ssp:
-        description: 'whether to apply the patch for download ssp bin from local or remote url'
-        required: true
-        default: 'false'
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
@@ -101,12 +97,6 @@ jobs:
         cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
         cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
         fi
-    - name: Recovery SSP bin files download from remote
-      if: github.event.inputs.ssp == 'true'
-      run: |
-        cd $WORK_PATH/trunk/user/shared
-        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/trojan#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/ssp/trojan#g" ./defaults.c
-        sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/v2ray#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/ssp/v2ray#g" ./defaults.c
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
@@ -136,7 +126,6 @@ jobs:
         sed -i '/CONFIG_FIRMWARE_INCLUDE_IPT2SOCKS/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MICROSOCKS/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_OPENVPN/d' .config
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SERVERCHAN/d' .config
         #校园网相关开始
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #删除配置项MENTOHUST
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #删除配置项SCUTCLIENT
@@ -186,8 +175,6 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_WYYBIN=n" >> .config #网易云解锁GO版本执行文件（4M多）注意固件超大小,不集成会自动下载
         #
         echo "CONFIG_FIRMWARE_INCLUDE_OPENVPN=y" >> .config #openvpn
-        #
-        echo "CONFIG_FIRMWARE_INCLUDE_SERVERCHAN=y" >> .config #serverchan
         #校园网相关开始
         echo "CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n" >> .config #MENTOHUST
         echo "CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n" >> .config #SCUTCLIENT
