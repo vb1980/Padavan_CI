@@ -86,6 +86,9 @@ jobs:
         cp -f bashScripts/v2.sh $(pwd)
         sudo chmod 777 ./v2.sh
         bash ./v2.sh $WORK_PATH/trunk/user/v2ray
+    - name: Fix htop build
+      run: |
+        cp -f htop/htop-3.0.2.tar.gz $WORK_PATH/trunk/user/htop
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
