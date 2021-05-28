@@ -19,10 +19,6 @@ on:
         description: 'whether to apply rainbow ui'
         required: true
         default: 'true'
-      setsakura:
-        description: 'whether to set sakura login background'
-        required: true
-        default: 'true'
       specializedlogo:
         description: 'whether to apply specialized logo for a-040w-q'
         required: true
@@ -87,11 +83,6 @@ jobs:
       run: |
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
-    - name: Set sakura login background
-      if: github.event.inputs.rainbowui == 'true' && github.event.inputs.setsakura == 'true'
-      run: |
-        cp -f sakura/login.css $WORK_PATH/trunk/user/www/n56u_rainbow/login/login.css
-        cp -f sakura/Login.asp $WORK_PATH/trunk/user/www/n56u_rainbow/Login.asp
     - name: Apply specialized logo
       if: github.event.inputs.specializedlogo == 'true'
       run: |
