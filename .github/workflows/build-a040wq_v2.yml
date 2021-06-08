@@ -10,11 +10,11 @@ on:
       branch:
         description: 'padavan git branch'
         required: true
-        default: ''
+        default: 'main'
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20210507'
+        default: '20210608'
       rainbowui:
         description: 'whether to apply rainbow ui'
         required: true
