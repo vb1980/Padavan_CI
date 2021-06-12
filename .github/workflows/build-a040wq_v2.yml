@@ -63,7 +63,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        if [ "${{ github.event.inputs.branch }}" = "" ]
+        if [ "${{ github.event.inputs.branch }}" = "main" ]
         then
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
         else
