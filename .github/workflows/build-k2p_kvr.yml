@@ -1,0 +1,110 @@
+name: Build K2P_KVR
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build_K2P_KVR'
+        required: true
+        default: 'build'
+      uploadcow:
+        description: 'whether to upload firmware to cowtransfer'
+        required: true
+        default: 'true'
+      uploadwet:
+        description: 'whether to upload firmware to wettransfer'
+        required: true
+        default: 'false'
+      pushplus:
+        description: 'whether to notify through pushplus'
+        required: true
+        default: 'true'
+env:
+  REPOSITORY_URL: https://github.com/padavanonly/rt-n56u.git
+  TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
+  WORK_PATH: /opt/rt-n56u 
+  TARGET_NAME: K2P
+  FIRMWARE_AUTHOR: padavanonly
+  FIRMWARE_PATH: /opt/firmwares
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo apt-get update
+        sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot kmod \
+        cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
+        pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget \
+        libc-dev-bin
+    - name: Clone source code
+      run: |
+        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        cd $WORK_PATH/toolchain-mipsel
+        mkdir -p toolchain-3.4.x
+        wget $TOOLCHAIN_URL
+        tar -xvf mipsel-linux-uclibc.tar.xz -C toolchain-3.4.x
+    - name: Set environment variables
+      run: |
+        git config --global log.date format:'%Y%m%d'
+        cd $WORK_PATH
+        echo "FIRMWARE_VERSION=$(git log -1 --pretty=format:"%cd")" >> $GITHUB_ENV
+        echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
+    - name: Custom config
+      run: |
+        cd $WORK_PATH/trunk
+        if [ ! -f configs/templates/$TARGET_NAME.config ] ; then
+        echo "configs/templates/${TARGET_NAME}.config not found"
+        exit 1
+        fi
+        cp -f configs/templates/$TARGET_NAME.config .config
+        sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${FIRMWARE_VERSION}/g" ./versions.inc
+    - name: Build firmware
+      run: |
+        cd $WORK_PATH/trunk
+        ./clear_tree
+        fakeroot ./build_firmware_modify $TARGET_NAME
+    - name: Organize firmware files
+      id: organize
+      run: |
+        mkdir -p $FIRMWARE_PATH/
+        cd $WORK_PATH/trunk/images
+        for firmwarefile in $(ls *.trx)
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_kvr_"$firmwarefile
+        done
+        cd $FIRMWARE_PATH
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+    - name : Upload packages
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success'
+      with:
+        name: Padavan-K2p_v5-packages
+        path: ${{ env.FIRMWARE }}
+    - name: Upload firmware to cowtransfer
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+    - name: Upload firmware to WeTransfer
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+    - name: PushPlus Notification
+      uses: vb1980/Action_PushPlus@master
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
+      with:
+        token: ${{ secrets.PUSHTOKEN }}
+        title: ${{ env.TARGET_NAME }}_Build_Completed
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

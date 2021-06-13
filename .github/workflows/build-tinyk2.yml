@@ -233,10 +233,10 @@ jobs:
       with:
         age: '1 day'
         skip-recent: 5
-    - name: ServerChan Notification
-      uses: emon100/Action-Serverchan@master
+    - name: PushPlus Notification
+      uses: vb1980/Action_PushPlus@master
       if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
       with:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ env.TARGET_NAME }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;�CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it��!
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

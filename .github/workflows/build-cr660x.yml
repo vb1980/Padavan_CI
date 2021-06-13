@@ -222,8 +222,8 @@ jobs:
       with:
         age: '1 day'
         skip-recent: 5
-    - name: ServerChan Notification
-      uses: emon100/Action-Serverchan@master
+    - name: PushPlus Notification
+      uses: vb1980/Action_PushPlus@master
       if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
       with:
         token: ${{ secrets.PUSHTOKEN }}
