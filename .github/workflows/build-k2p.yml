@@ -31,10 +31,10 @@ on:
         description: 'whether to upload firmware to wettransfer'
         required: true
         default: 'false'
-      serverchan:
-        description: 'whether to notify through serverchan'
+      pushplus:
+        description: 'whether to notify through pushplus'
         required: true
-        default: 'true'
+        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/chongshengB/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -259,20 +259,8 @@ jobs:
         skip-recent: 5
     - name: ServerChan Notification
       uses: emon100/Action-Serverchan@master
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.serverchan == 'true'
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
       with:
-        SCKEY: ${{ secrets.SCKEY }}
-        text: ${{ env.TARGET_NAME }}_Build_Completed
-        desp: Congratulations,
-              
-              
-              Your **${{ env.TARGET_NAME }}** padavan firmware build completed!
-              
-              
-              🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}
-              
-              
-              Enjoy it🎈🎁!
-              
-              
-              
+        token: ${{ secrets.PUSHTOKEN }}
+        title: ${{ env.TARGET_NAME }}_Build_Completed
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;�CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it��!
