@@ -10,11 +10,11 @@ on:
       branch:
         description: 'padavan git branch'
         required: true
-        default: ''
+        default: 'main'
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20210507'
+        default: '20210613'
       rainbowui:
         description: 'whether to apply rainbow ui'
         required: true
@@ -22,7 +22,7 @@ on:
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
-        default: 'false'
+        default: 'true'
       uploadwet:
         description: 'whether to upload firmware to wettransfer'
         required: true
@@ -30,7 +30,7 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'false'
+        default: 'true'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz

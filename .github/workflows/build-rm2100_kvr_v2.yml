@@ -19,14 +19,10 @@ on:
         description: 'whether to apply rainbow ui'
         required: true
         default: 'true'
-      specializedlogo:
-        description: 'whether to apply specialized logo for a-040w-q'
-        required: true
-        default: 'true'
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
-        default: 'false'
+        default: 'true'
       uploadwet:
         description: 'whether to upload firmware to wettransfer'
         required: true
@@ -34,7 +30,7 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'false'
+        default: 'true'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -83,20 +79,6 @@ jobs:
       run: |
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
-    - name: Apply specialized logo
-      if: github.event.inputs.specializedlogo == 'true'
-      run: |
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
-        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]
-        then
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_green.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_orange.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_purple.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
-        fi
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
