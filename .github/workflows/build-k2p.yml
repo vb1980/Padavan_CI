@@ -41,17 +41,9 @@ env:
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: K2P-5.0
-  #FIRMWARE_VERSION: 20201015
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  #APPLY_RAINBOWTHEME: true
-  #APPLY_MobileCompatible: false
-  #RECOVERY_SSPBINREMOTEDOWNLOAD: true
-  #BUILD_OWNER: vb1980
-  #UPLOAD_COWTRANSFER: false
-  #UPLOAD_WETRANSFER: false
-  #SERVERCHAN_NOTIFICATION: true
 jobs:
   build:
     runs-on: ubuntu-20.04

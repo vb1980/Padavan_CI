@@ -280,6 +280,3 @@ jobs:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ env.TARGET_NAME }}_Build_Completed
         content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
-              
-              
-              

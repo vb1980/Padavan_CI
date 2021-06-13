@@ -41,18 +41,10 @@ env:
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: NEWIFI3
-  #FIRMWARE_VERSION: 20201015
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: chongshengB
   FIRMWARE_PATH: /opt/firmwares
-  #APPLY_RAINBOWTHEME: false
-  #APPLY_MobileCompatible: true
-  #RECOVERY_SSPBINREMOTEDOWNLOAD: false
   Remove_RSSI: false
-  #BUILD_OWNER: vb1980
-  #UPLOAD_COWTRANSFER: true
-  #UPLOAD_WETRANSFER: false
-  #SERVERCHAN_NOTIFICATION: true
 jobs:
   build:
     runs-on: ubuntu-20.04

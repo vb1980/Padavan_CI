@@ -85,7 +85,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success'
       with:
-        name: Padavan-K2p_v5-packages
+        name: Padavan-K2p_KVR-packages
         path: ${{ env.FIRMWARE }}
     - name: Upload firmware to cowtransfer
       if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
