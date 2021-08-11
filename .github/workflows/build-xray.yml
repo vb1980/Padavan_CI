@@ -1,4 +1,4 @@
-name: Build xray for padavan
+name: Build Xray
 
 on: 
   workflow_dispatch:
