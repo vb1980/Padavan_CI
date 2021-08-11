@@ -31,9 +31,9 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/xtls/xray-core.git xray-core
         cd xray-core/main
-        GOOS=linux GOARCH=mipsle go build -o ../../xray
-        cd ../../
-        #upx -9 xray
+        GOOS=linux GOARCH=mipsle go build -o /workdir/xray
+        cd /workdir/xray
+        upx -9 xray
         shopt -s extglob
         rm -vrf !("xray")
         echo "xray=$PWD" >> $GITHUB_ENV
