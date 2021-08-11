@@ -30,9 +30,9 @@ jobs:
       id: build
       run: |
         git clone --depth=1 https://github.com/xtls/xray-core.git xray-core
-        #cd xray-core/main
+        cd xray-core/main
         #GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray
-        GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray -trimpath -ldflags "-s -w -buildid=" ./main
+        GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray -trimpath -ldflags "-s -w -buildid=" ./
         cd ../../xraybin
         upx -9 xray
         shopt -s extglob
