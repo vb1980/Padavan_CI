@@ -34,6 +34,8 @@ jobs:
         GOOS=linux GOARCH=mipsle go build -o ../../xray
         cd ../../
         #upx -9 xray
+        shopt -s extglob
+        rm -vrf !("xray")
         echo "xray=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
 
