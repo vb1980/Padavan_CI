@@ -1,0 +1,45 @@
+name: Build xray for padavan
+
+on: 
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build xray for padavan'
+        required: true
+        default: 'build'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Setup golang version
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.2'
+
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt install upx git -y
+
+    - name: Clone&Build source code
+      id: build
+      run: |
+        git clone --depth=1 https://github.com/xtls/xray-core.git xray-core
+        cd xray-core/main
+        GOOS=linux GOARCH=mipsle go build -o ../../xray
+        cd ../../
+        #upx -9 xray
+        echo "xray=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+
+    - name : Upload packages
+      uses: actions/upload-artifact@main
+      if: steps.build.outputs.status == 'success'
+      with:
+        name: xray-packages
+        path: ${{ env.xray }}
