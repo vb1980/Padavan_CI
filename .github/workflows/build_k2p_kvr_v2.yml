@@ -183,7 +183,7 @@ jobs:
       env:
         GOROOT: /opt/hostedtoolcache/go/1.16.5/x64
       run: |
-        #export PATH=${GOROOT}/bin:$PATH
+        export PATH=${GOROOT}/bin:$PATH
         cd $WORK_PATH/trunk
         sudo ./clear_tree
         sudo ./build_firmware_modify $TARGET_NAME 0
