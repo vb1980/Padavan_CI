@@ -181,10 +181,13 @@ jobs:
         go-version: '1.16.5'
     - name: Build firmware
       env:
+        GO111MODULE: on
         GOROOT: /opt/hostedtoolcache/go/1.16.5/x64
       run: |
         #export PATH=${GOROOT}/bin:$PATH
-        export GOROOT=${GOROOT}
+        #export GOROOT=${GOROOT}
+        echo "CGO_ENABLED=0" >> $GITHUB_ENV
+        echo "${HOME}/goroot/bin" >> $GITHUB_PATH
         cd $WORK_PATH/trunk
         sudo ./clear_tree
         sudo ./build_firmware_modify $TARGET_NAME 0
