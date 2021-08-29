@@ -1,5 +1,5 @@
 #!/bin/bash
-v2ver='4.34.0'
+v2ver='4.41.1'
 v2pkg="v2ray/v2ray-core-$v2ver.tar.gz"
 v2path=$1
 echo $v2ver
