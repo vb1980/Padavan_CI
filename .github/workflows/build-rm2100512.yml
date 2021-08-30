@@ -32,7 +32,7 @@ on:
         required: true
         default: 'false'
 env:
-  REPOSITORY_URL: https://github.com/keke1023/Padavan.git
+  REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
@@ -69,14 +69,14 @@ jobs:
         cp -f bashScripts/go.sh $(pwd)
         sudo chmod 777 ./go.sh
         bash ./go.sh
-    - name: Update v2ray
-      run: |
-        cp -f bashScripts/v2.sh $(pwd)
-        sudo chmod 777 ./v2.sh
-        bash ./v2.sh $WORK_PATH/trunk/user/v2ray
-    - name: Fix htop build
-      run: |
-        cp -f htop/htop-3.0.2.tar.gz $WORK_PATH/trunk/user/htop
+    #- name: Update v2ray
+    #  run: |
+    #    cp -f bashScripts/v2.sh $(pwd)
+    #    sudo chmod 777 ./v2.sh
+    #    bash ./v2.sh $WORK_PATH/trunk/user/v2ray
+    #- name: Fix htop build
+    #  run: |
+    #    cp -f htop/htop-3.0.2.tar.gz $WORK_PATH/trunk/user/htop
     - name: Apply mobile compatible
       if: github.event.inputs.mobileui == 'true'
       run: |

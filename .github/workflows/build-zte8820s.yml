@@ -32,13 +32,13 @@ on:
         required: true
         default: 'false'
 env:
-  REPOSITORY_URL: https://github.com/chongshengB/rt-n56u.git
+  REPOSITORY_URL: https://github.com/keke1023/Padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: ZTE_E8820s
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
-  FIRMWARE_AUTHOR: chongshengB
+  FIRMWARE_AUTHOR: keke1023
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
