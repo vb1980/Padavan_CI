@@ -32,13 +32,13 @@ on:
         required: true
         default: 'true'
 env:
-  REPOSITORY_URL: https://github.com/keke1023/Padavan.git
+  REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: RM2100-512-5.0
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
-  FIRMWARE_AUTHOR: keke1023
+  FIRMWARE_AUTHOR: vb1980
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
