@@ -10,11 +10,11 @@ on:
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20201015'
+        default: '20210830'
       mobileui:
         description: 'whether to apply mobile ui patch for original ui'
         required: true
-        default: 'false'
+        default: 'true'
       ssp:
         description: 'whether to apply the patch for download ssp bin from local or remote url'
         required: true
@@ -30,9 +30,9 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'false'
+        default: 'true'
 env:
-  REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
+  REPOSITORY_URL: https://github.com/keke1023/Padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
