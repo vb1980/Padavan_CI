@@ -75,9 +75,6 @@ jobs:
       run: |
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
-    - name: Copy mod kernal file
-      run: |
-        cp -f k2mod/kernel-3.4.x_16m.config $WORK_PATH/trunk/configs/boards/PSG1218/kernel-3.4.x.config
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
