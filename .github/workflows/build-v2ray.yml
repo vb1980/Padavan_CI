@@ -12,6 +12,33 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
-    - name: test
+    #- name: test
+    #  run: |
+    #    echo "${{env.v2raydir}}"
+    - name: Setup golang version
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.16.6'
+    - name: Initialization environment
       run: |
-        echo "${{env.v2raydir}}"
+        sudo apt-get update
+        sudo apt install curl upx git -y
+    - name: Build v2ray
+      run: |
+        cp -f ${{env.v2raydir}}/v2ray_Makefile ./Makefile
+        sudo chmod+x ./Makefile
+        ./Makefile
+    - name: Upx v2ray
+      run: |
+        cd ./bin
+        upx -9 v2ray
+        shopt -s extglob
+        rm -vrf !("v2ray")
+        echo "v2ray=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+    - name : Upload packages
+      uses: actions/upload-artifact@main
+      if: steps.build.outputs.status == 'success'
+      with:
+        name: v2ray-packages
+        path: ${{ env.v2ray }}
