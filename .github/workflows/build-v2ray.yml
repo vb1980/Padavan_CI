@@ -12,9 +12,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
-    #- name: test
-    #  run: |
-    #    echo "${{env.v2raydir}}"
     - name: Setup golang version
       uses: actions/setup-go@v2
       with:
@@ -32,8 +29,9 @@ jobs:
       run: |
         cd ./bin
         upx -9 v2ray
-        shopt -s extglob
-        rm -vrf !("v2ray")
+        ls *
+        #shopt -s extglob
+        #rm -vrf !("v2ray")
         echo "v2ray=$PWD" >> $GITHUB_ENV
         echo "${{env.v2ray}}"
         echo "::set-output name=status::success"
