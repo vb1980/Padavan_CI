@@ -14,10 +14,8 @@ v2ray_SED_ARGS += \
 all:download_v2 build_extract build_v2ray
 
 download_v2:
-	( if [ ! -f $(THISDIR)/v2ray-core-$(v2ray_VERSION).tar.gz ]; then \
-	curl --create-dirs -L $(v2ray_URL) -o $(THISDIR)/v2ray-core-$(v2ray_VERSION).tar.gz ; \
-	fi )
-
+	curl --create-dirs -L $(v2ray_URL) -o $(THISDIR)/v2ray-core-$(v2ray_VERSION).tar.gz
+	
 build_extract:
 	mkdir -p $(THISDIR)/v2ray.com
 	mkdir -p $(THISDIR)/bin
