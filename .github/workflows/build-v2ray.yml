@@ -29,7 +29,7 @@ jobs:
       run: |
         cd ./bin
         upx -9 v2ray
-        ls *
+        #ls *
         #shopt -s extglob
         #rm -vrf !("v2ray")
         echo "v2ray=$PWD" >> $GITHUB_ENV
