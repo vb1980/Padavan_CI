@@ -26,22 +26,17 @@ jobs:
         sudo chmod +x ./Makefile
         make
     - name: Upx v2ray
+      id: upx
       run: |
-        mkdir -p /home/runner/work/v2raybin
         cd ./bin
         upx -9 v2ray
-        sudo mv v2ray /home/runner/work/v2raybin
-        #ls *
-        #shopt -s extglob
-        #rm -vrf !("v2ray")
-        cd /home/runner/work/v2raybin
-        echo "v2raybin=$(pwd)" >> $GITHUB_ENV
-        echo "${{env.v2raybin}}"
-        echo "$(pwd)"
+        shopt -s extglob
+        rm -vrf !("v2ray")
+        echo "v2ray=$(pwd)" >> $GITHUB_ENV
         echo "::set-output name=status::success"
     - name : Upload packages
       uses: actions/upload-artifact@main
-      if: steps.build.outputs.status == 'success'
+      if: steps.upx.outputs.status == 'success'
       with:
         name: v2ray-packages
-        path: ${{ env.v2raybin }}
+        path: ${{ env.v2ray }}
