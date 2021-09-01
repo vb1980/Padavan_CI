@@ -26,7 +26,7 @@ jobs:
     - name: Build v2ray
       run: |
         cp -f ${{env.v2raydir}}/v2ray_Makefile ./Makefile
-        sudo chmod+x ./Makefile
+        sudo chmod +x ./Makefile
         ./Makefile
     - name: Upx v2ray
       run: |
