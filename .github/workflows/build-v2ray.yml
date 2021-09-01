@@ -27,17 +27,20 @@ jobs:
         make
     - name: Upx v2ray
       run: |
+        mkdir -p /home/runner/work/v2raybin
         cd ./bin
         upx -9 v2ray
+        sudo mv v2ray /home/runner/work/v2raybin
         #ls *
         #shopt -s extglob
         #rm -vrf !("v2ray")
-        echo "v2ray=$PWD" >> $GITHUB_ENV
-        echo "${{env.v2ray}}"
+        cd /home/runner/work/v2raybin
+        echo "v2raybin=$PWD" >> $GITHUB_ENV
+        echo "${{env.v2raybin}}"
         echo "::set-output name=status::success"
     - name : Upload packages
       uses: actions/upload-artifact@main
       if: steps.build.outputs.status == 'success'
       with:
         name: v2ray-packages
-        path: ${{ env.v2ray }}
+        path: ${{ env.v2raybin }}
