@@ -29,5 +29,5 @@ build_v2ray:
 	sed -i \
 			'$(v2ray_SED_ARGS)' \
 			distro/all/all.go ; \
-	GOOS=linux GOARCH=mipsle go build -ldflags "-w -s" -o $(THISDIR)/bin/v2ray; \
+	GOOS=linux GOARCH=mipsle go build -ldflags "-s -w -buildid=" -o $(THISDIR)/bin/v2ray; \
 	)
