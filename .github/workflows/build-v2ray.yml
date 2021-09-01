@@ -35,6 +35,7 @@ jobs:
         shopt -s extglob
         rm -vrf !("v2ray")
         echo "v2ray=$PWD" >> $GITHUB_ENV
+        echo "${{env.v2ray}}"
         echo "::set-output name=status::success"
     - name : Upload packages
       uses: actions/upload-artifact@main
