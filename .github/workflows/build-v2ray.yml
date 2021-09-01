@@ -35,8 +35,9 @@ jobs:
         #shopt -s extglob
         #rm -vrf !("v2ray")
         cd /home/runner/work/v2raybin
-        echo "v2raybin=$PWD" >> $GITHUB_ENV
+        echo "v2raybin=$(pwd)" >> $GITHUB_ENV
         echo "${{env.v2raybin}}"
+        echo "$(pwd)"
         echo "::set-output name=status::success"
     - name : Upload packages
       uses: actions/upload-artifact@main
