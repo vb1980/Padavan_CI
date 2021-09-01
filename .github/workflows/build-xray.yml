@@ -34,7 +34,7 @@ jobs:
         #GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray
         GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray -trimpath -ldflags "-s -w -buildid=" ./
         cd ../../xraybin
-        upx -9 xray
+        #upx -9 xray
         shopt -s extglob
         rm -vrf !("xray")
         echo "xray=$PWD" >> $GITHUB_ENV
