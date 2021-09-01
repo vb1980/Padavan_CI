@@ -22,12 +22,12 @@ jobs:
     - name: Initialization environment
       run: |
         sudo apt-get update
-        sudo apt install curl upx git -y
+        sudo apt install make curl upx git -y
     - name: Build v2ray
       run: |
         cp -f ${{env.v2raydir}}/v2ray_Makefile ./Makefile
         sudo chmod +x ./Makefile
-        ./Makefile
+        make
     - name: Upx v2ray
       run: |
         cd ./bin
