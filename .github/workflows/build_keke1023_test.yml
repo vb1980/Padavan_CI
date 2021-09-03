@@ -1,5 +1,5 @@
-#编译测试keke1203仓库的源码
-name: Build Keke1203 Padavan
+#编译测试keke1023仓库的源码
+name: Build Keke1023 Padavan
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ env:
   TIME_ZONE: Asia/Shanghai
   TARGET_NAME: K2P
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
-  FIRMWARE_AUTHOR: keke1203
+  FIRMWARE_AUTHOR: keke1023
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
