@@ -3,10 +3,6 @@ name: Build ZTE-E8820S
 on: 
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Build_ChongshengB_Padavan'
-        required: true
-        default: 'build'
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -32,13 +28,13 @@ on:
         required: true
         default: 'false'
 env:
-  REPOSITORY_URL: https://github.com/keke1023/Padavan.git
+  REPOSITORY_URL: https://github.com/vb1980/Padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
-  TARGET_NAME: ZTE_E8820s
+  TARGET_NAME: ZTE_E8820S
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
-  FIRMWARE_AUTHOR: keke1023
+  FIRMWARE_AUTHOR: vb1980
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
@@ -69,26 +65,12 @@ jobs:
         cp -f bashScripts/go.sh $(pwd)
         sudo chmod 777 ./go.sh
         bash ./go.sh
-    - name: Update v2ray
-      run: |
-        cp -f bashScripts/v2.sh $(pwd)
-        sudo chmod 777 ./v2.sh
-        bash ./v2.sh $WORK_PATH/trunk/user/v2ray
-    - name: Fix htop build
-      run: |
-        cp -f htop/htop-3.0.2.tar.gz $WORK_PATH/trunk/user/htop
     - name: Apply mobile compatible
       if: github.event.inputs.mobileui == 'true'
       run: |
         cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
         cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-    - name: Copy ZTE-E8820s configs
-      run: |
-        cp -f e8820s/ZTE-E8820s_configs.tar.xz $WORK_PATH/trunk
-        cd $WORK_PATH/trunk
-        sudo chmod +x ./ZTE-E8820s_configs.tar.xz
-        tar -xvf ZTE-E8820s_configs.tar.xz
     - name: Recovery SSP bin files download from remote
       if: github.event.inputs.ssp == 'true'
       run: |

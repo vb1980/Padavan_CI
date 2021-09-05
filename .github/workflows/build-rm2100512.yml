@@ -1,4 +1,4 @@
-name: Build RM2100_512v5
+name: Build RM2100_512
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ on:
         required: true
         default: 'true'
 env:
-  REPOSITORY_URL: https://github.com/chongshengB/rt-n56u.git
+  REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
-  TARGET_NAME: RM2100-512-5.0
+  TARGET_NAME: RM2100-512
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
-  FIRMWARE_AUTHOR: chongshengB
+  FIRMWARE_AUTHOR: vb1980
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
@@ -65,28 +65,12 @@ jobs:
         cp -f bashScripts/go.sh $(pwd)
         sudo chmod 777 ./go.sh
         bash ./go.sh
-    - name: Update v2ray
-      run: |
-        cp -f bashScripts/v2.sh $(pwd)
-        sudo chmod 777 ./v2.sh
-        bash ./v2.sh $WORK_PATH/trunk/user/v2ray
-    - name: Fix htop build
-      run: |
-        cp -f htop/htop-3.0.2.tar.gz $WORK_PATH/trunk/user/htop
     - name: Apply mobile compatible
       if: github.event.inputs.mobileui == 'true'
       run: |
         cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
         cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-    - name: Copy RM2100-512 configs
-      run: |
-        cp -f rm2100512/RM2100-512_configs.tar.xz $WORK_PATH/trunk
-        cd $WORK_PATH/trunk
-        sudo chmod +x ./RM2100-512_configs.tar.xz
-        tar -xvf RM2100-512_configs.tar.xz
-        #cp -f rm2100512/RM2100-512.config $WORK_PATH/trunk/configs/templates
-        #cp -f rm2100512/kernel-3.4.x-5.0-512.config $WORK_PATH/trunk/configs/boards/RM2100
     - name: Recovery SSP bin files download from remote
       if: github.event.inputs.ssp == 'true'
       run: |

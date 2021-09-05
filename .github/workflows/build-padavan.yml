@@ -32,7 +32,7 @@ on:
         required: true
         default: 'false'
 env:
-  REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
+  REPOSITORY_URL: https://github.com/chongshengB/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
