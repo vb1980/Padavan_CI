@@ -1,32 +1,24 @@
-name: Build BELL-A-040W-Q V2
+name: Build RM2100 Xray
 
 on: 
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Build_vb1980_Padavan'
-        required: true
-        default: 'build'
       branch:
         description: 'padavan git branch'
         required: true
-        default: 'main'
+        default: 'xray'
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20210608'
+        default: '20210613'
       rainbowui:
         description: 'whether to apply rainbow ui'
-        required: true
-        default: 'true'
-      specializedlogo:
-        description: 'whether to apply specialized logo for a-040w-q'
         required: true
         default: 'true'
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
-        default: 'false'
+        default: 'true'
       uploadwet:
         description: 'whether to upload firmware to wettransfer'
         required: true
@@ -34,13 +26,13 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'false'
+        default: 'true'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
-  TARGET_NAME: BELL-A-040W-Q
+  TARGET_NAME: RM2100
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: vb1980
   FIRMWARE_PATH: /opt/firmwares
@@ -83,20 +75,6 @@ jobs:
       run: |
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
-    - name: Apply specialized logo
-      if: github.event.inputs.specializedlogo == 'true'
-      run: |
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
-        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]
-        then
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_green.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_orange.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_purple.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
-        cp -f a040wq/bell_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
-        fi
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
@@ -120,6 +98,7 @@ jobs:
         sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPS/d' .config #删除配置项adbyby plus+
         sed -i '/CONFIG_FIRMWARE_INCLUDE_TUNSAFE/d' .config #删除配置项adbyby plus+
         sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config #删除配置项阿里DDNS
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_CLOUDFLAREDDNS/d' .config #删除配置项CloudFlareDDNS
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SRELAY/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_KUMASOCKS/d' .config
@@ -143,8 +122,9 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD=n" >> .config #SOFTETHERVPN
         #科学相关
         echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config #SS plus+
-        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #集成v2ray执行文件（3.8M左右)，如果不集成，会从网上下载下来执行，不影响正常使用
-        echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config #集成trojan执行文件(1.1M左右)，如果不集成，会从网上下载下来执行，不影响正常使用
+        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #集成v2ray执行文件（3.8M左右)
+        echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config #集成xray执行文件(5.6M左右)，可以代替v2ray，注：如果闪存太小不够还是建议使用v2ray
+        echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config #集成trojan执行文件(1.1M左右)
         echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config # simple-obfs混淆插件
         echo "CONFIG_FIRMWARE_INCLUDE_SSSERVER=n" >> .config #SS server
         echo "CONFIG_FIRMWARE_INCLUDE_KUMASOCKS=y" >> .config #socks5
@@ -166,6 +146,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y" >> .config
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #阿里DDNS
+        echo "CONFIG_FIRMWARE_INCLUDE_CLOUDFLAREDDNS=y" >> .config #CloudFlareDDNS
         echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config #zerotier ~1.3M
         #
         echo "CONFIG_FIRMWARE_INCLUDE_CADDY=n" >> .config #在线文件管理服务

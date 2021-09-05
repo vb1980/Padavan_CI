@@ -1,6 +1,6 @@
-name: Build K2P KVR V2
+name: Build ZTE-E8820S 5.0.5
 
-on:
+on: 
   workflow_dispatch:
     inputs:
       name:
@@ -10,19 +10,23 @@ on:
       branch:
         description: 'padavan git branch'
         required: true
-        default: '5.0.4_kvr'
+        default: 'main'
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20210816'
+        default: '20210608'
       rainbowui:
         description: 'whether to apply rainbow ui'
+        required: true
+        default: 'true'
+      specializedlogo:
+        description: 'whether to apply specialized logo for e8820s'
         required: true
         default: 'true'
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
-        default: 'true'
+        default: 'false'
       uploadwet:
         description: 'whether to upload firmware to wettransfer'
         required: true
@@ -30,13 +34,13 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'true'
+        default: 'false'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
-  TARGET_NAME: K2P
+  TARGET_NAME: ZTE_E8820S
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: vb1980
   FIRMWARE_PATH: /opt/firmwares
@@ -79,6 +83,20 @@ jobs:
       run: |
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
+    - name: Apply specialized logo
+      if: github.event.inputs.specializedlogo == 'true'
+      run: |
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
+        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]
+        then
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_green.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_orange.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_purple.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
+        cp -f e8820s/zte_asus_logo.png $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
+        fi
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
@@ -126,14 +144,15 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD=n" >> .config #SOFTETHERVPN
         #科学相关
         echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config #SS plus+
-        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #集成v2ray执行文件（3.8M左右)，如果不集成，会从网上下载下来执行，不影响正常使用
-        echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config #集成trojan执行文件(1.1M左右)，如果不集成，会从网上下载下来执行，不影响正常使用
-        echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=y" >> .config # simple-obfs混淆插件
+        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #集成v2ray执行文件（3.8M左右)
+        echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config #集成xray执行文件(5.6M左右)，可以代替v2ray，注：如果闪存太小不够还是建议使用v2ray
+        echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config #集成trojan执行文件(1.1M左右)
+        echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config # simple-obfs混淆插件
         echo "CONFIG_FIRMWARE_INCLUDE_SSSERVER=n" >> .config #SS server
         echo "CONFIG_FIRMWARE_INCLUDE_KUMASOCKS=y" >> .config #socks5
         #
-        echo "CONFIG_FIRMWARE_INCLUDE_IPT2SOCKS=y" >> .config
-        echo "CONFIG_FIRMWARE_INCLUDE_MICROSOCKS=y" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_IPT2SOCKS=n" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_MICROSOCKS=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_SRELAY=n" >> .config #可以不集成
         echo "CONFIG_FIRMWARE_INCLUDE_TUNSAFE=n" >> .config #TUNSAFE
         echo "CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=n" >> .config #DNSFORWARDER
@@ -142,15 +161,15 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #内网穿透FRPS
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ADBYBY=y" >> .config #adbyby plus+
-        echo "CONFIG_FIRMWARE_INCLUDE_KOOLPROXY=n" >> .config #KP广告过滤
+        echo "CONFIG_FIRMWARE_INCLUDE_KOOLPROXY=y" >> .config #KP广告过滤
         #
         echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=n" >> .config #smartdns
         echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=n" >> .config #smartdns二进制文件
-        echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=n" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y" >> .config
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #阿里DDNS
-        echo "CONFIG_FIRMWARE_INCLUDE_CLOUDFLAREDDNS=n" >> .config #CloudFlareDDNS
-        echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=n" >> .config #zerotier ~1.3M
+        echo "CONFIG_FIRMWARE_INCLUDE_CLOUDFLAREDDNS=y" >> .config #CloudFlareDDNS
+        echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config #zerotier ~1.3M
         #
         echo "CONFIG_FIRMWARE_INCLUDE_CADDY=n" >> .config #在线文件管理服务
         echo "CONFIG_FIRMWARE_INCLUDE_CADDYBIN=n" >> .config #集成caddu执行文件，此文件有13M,请注意固件大小。如果不集成，会从网上下载下来执行，不影响正常使用
@@ -209,15 +228,15 @@ jobs:
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
-        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     - name: Upload firmware to WeTransfer
       if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+        echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
       if: steps.organizer.outputs.status == 'success'
