@@ -75,8 +75,8 @@ jobs:
       if: github.event.inputs.ssp == 'true'
       run: |
         cp -f ssp/shadowsocks.sh $WORK_PATH/trunk/user/shadowsocks/scripts
-        cp -f ssp/defaults.c $WORK_PATH/trunk/user/shared
-        cp -f ssp/variables.c $WORK_PATH//trunk/user/httpd
+        #cp -f ssp/defaults.c $WORK_PATH/trunk/user/shared
+        #cp -f ssp/variables.c $WORK_PATH//trunk/user/httpd
         cp -f ssp/Shadowsocks.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cd $WORK_PATH/trunk/user/shared
         sed -i "s#https://cdn.jsdelivr.net/gh/Padavan_CI/ssp/trojan#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/ssp/trojan#g" ./defaults.c
@@ -84,8 +84,8 @@ jobs:
     - name: Update latest adg
       run: |
         cp -f adg/adguardhome.sh $WORK_PATH/trunk/user/adguardhome
-        cp -f adg/defaults.c $WORK_PATH/trunk/user/shared
-        cp -f adg/variables.c $WORK_PATH//trunk/user/httpd
+        #cp -f adg/defaults.c $WORK_PATH/trunk/user/shared
+        #cp -f adg/variables.c $WORK_PATH//trunk/user/httpd
         cp -f adg/Advanced_adguardhome.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         #cd $WORK_PATH/trunk/user/adguardhome
         #sed -i "s#https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome#https://cdn.jsdelivr.net/gh/${{ github.repository_owner }}/Padavan_CI/adg/AdGuardHome#g" ./adguardhome.sh

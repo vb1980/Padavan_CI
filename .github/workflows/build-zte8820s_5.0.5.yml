@@ -3,10 +3,6 @@ name: Build ZTE-E8820S 5.0.5
 on: 
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Build_vb1980_Padavan'
-        required: true
-        default: 'build'
       branch:
         description: 'padavan git branch'
         required: true
