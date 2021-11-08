@@ -2,6 +2,7 @@ name: Build Hanwckf K2P usb
 
 on:
   workflow_dispatch:
+    inputs:
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
@@ -37,7 +38,6 @@ jobs:
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot kmod \
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
         pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
-        sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
@@ -68,6 +68,7 @@ jobs:
     - name: Organize firmware files
       id: organize
       run: |
+        mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
         do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"$firmwarefile"_usb"
