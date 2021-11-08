@@ -2,6 +2,7 @@ name: Build Hanwckf K2P nano
 
 on:
   workflow_dispatch:
+    inputs:
       uploadcow:
         description: 'whether to upload firmware to cowtransfer'
         required: true
