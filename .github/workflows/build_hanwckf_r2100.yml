@@ -1,4 +1,4 @@
-name: Build Hanwckf R2100
+name: Build R2100 from hanwckf repo
 
 on:
   workflow_dispatch:
@@ -14,11 +14,12 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'true'
+        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
-  WORK_PATH: /opt/rt-n56u 
+  WORK_PATH: /opt/rt-n56u
+  TIME_ZONE: Asia/Shanghai
   TARGET_NAME: R2100
   FIRMWARE_AUTHOR: hanwckf
   FIRMWARE_PATH: /opt/firmwares
