@@ -1,4 +1,4 @@
-name: Build BELL-A-040W-Q
+name: Build BELL-A-040W-Q from vb1980 kvr repo
 
 on: 
   workflow_dispatch:
@@ -7,6 +7,10 @@ on:
         description: 'firmware''s version'
         required: true
         default: '20201015'
+      busyboxver:
+        description: 'busybox''s version'
+        required: true
+        default: '1.24.x'
       mobileui:
         description: 'whether to apply mobile ui patch for original ui'
         required: true
@@ -65,6 +69,13 @@ jobs:
         cp -f bashScripts/go.sh $(pwd)
         sudo chmod 777 ./go.sh
         bash ./go.sh
+    - name: Set busybox's version to compile
+      if: github.event.inputs.busyboxver == '1.24.x'
+      run: |
+        cd $WORK_PATH/trunk/user/busybox
+        sed -i "s/SRC_NAME=busybox.*/SRC_NAME=busybox-1.24.x/g" ./Makefile
+        cd $WORK_PATH/trunk
+        sed -i "s/busybox_id=\"1.34.1\"/busybox_id=\"1.24.x\"/g" ./build_firmware_modify
     - name: Apply mobile compatible
       if: github.event.inputs.mobileui == 'true'
       run: |
