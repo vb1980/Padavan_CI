@@ -1,16 +1,16 @@
-name: Build BELL-A-040W-Q Xray
+name: Build BELL-A-040W-Q rainbow kvr from vb1980 private repo
 
 on: 
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'padavan git branch'
-        required: true
-        default: 'xray'
       firmwarever:
         description: 'firmware''s version'
         required: true
         default: '20210829'
+      busyboxver:
+        description: 'busybox''s version'
+        required: true
+        default: '1.24.x'
       rainbowui:
         description: 'whether to apply rainbow ui'
         required: true
@@ -59,12 +59,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        if [ "${{ github.event.inputs.branch }}" = "main" ]
-        then
-        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
-        else
-        git clone -b ${{ github.event.inputs.branch }} --depth=1 $REPOSITORY_URL $WORK_PATH
-        fi
+        git clone -b xray --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH/toolchain-mipsel
         mkdir -p toolchain-3.4.x
         wget $TOOLCHAIN_URL
@@ -74,6 +69,13 @@ jobs:
         cp -f bashScripts/go.sh $(pwd)
         sudo chmod 777 ./go.sh
         bash ./go.sh
+    - name: Set busybox's version to compile
+      if: github.event.inputs.busyboxver == '1.24.x'
+      run: |
+        cd $WORK_PATH/trunk/user/busybox
+        sed -i "s/SRC_NAME=busybox.*/SRC_NAME=busybox-1.24.x/g" ./Makefile
+        cd $WORK_PATH/trunk
+        sed -i "s/busybox_id=\"1.34.1\"/busybox_id=\"1.24.x\"/g" ./build_firmware_modify
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
@@ -140,7 +142,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD=n" >> .config #SOFTETHERVPN
         #科学相关
         echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config #SS plus+
-        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #集成v2ray执行文件（3.8M左右)
+        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n" >> .config #集成v2ray执行文件（3.8M左右)
         echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config #集成xray执行文件(5.6M左右)，可以代替v2ray，注：如果闪存太小不够还是建议使用v2ray
         echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config #集成trojan执行文件(1.1M左右)
         echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config # simple-obfs混淆插件
@@ -161,7 +163,7 @@ jobs:
         #
         echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=n" >> .config #smartdns
         echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=n" >> .config #smartdns二进制文件
-        echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=y" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=n" >> .config
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #阿里DDNS
         echo "CONFIG_FIRMWARE_INCLUDE_CLOUDFLAREDDNS=n" >> .config #CloudFlareDDNS
@@ -173,7 +175,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_WYY=n" >> .config #网易云解锁
         echo "CONFIG_FIRMWARE_INCLUDE_WYYBIN=n" >> .config #网易云解锁GO版本执行文件（4M多）注意固件超大小,不集成会自动下载
         #
-        echo "CONFIG_FIRMWARE_INCLUDE_OPENVPN=y" >> .config #openvpn
+        echo "CONFIG_FIRMWARE_INCLUDE_OPENVPN=n" >> .config #openvpn
         #校园网相关开始
         echo "CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n" >> .config #MENTOHUST
         echo "CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n" >> .config #SCUTCLIENT
