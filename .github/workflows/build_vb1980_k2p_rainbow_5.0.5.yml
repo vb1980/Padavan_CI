@@ -1,12 +1,8 @@
-name: Build K2P 5.0.5
+name: Build K2P rainbow 5.0.5 from vb1980 private repo 
 
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'padavan git branch'
-        required: true
-        default: 'main'
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -26,7 +22,7 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'true'
+        default: 'false'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -55,12 +51,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        if [ "${{ github.event.inputs.branch }}" = "main" ]
-        then
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
-        else
-        git clone -b ${{ github.event.inputs.branch }} --depth=1 $REPOSITORY_URL $WORK_PATH
-        fi
         cd $WORK_PATH/toolchain-mipsel
         mkdir -p toolchain-3.4.x
         wget $TOOLCHAIN_URL
