@@ -1,4 +1,4 @@
-name: Build Hanwckf K2P
+name: Build K2P from hanwckf repo
 
 on:
   workflow_dispatch:
@@ -14,11 +14,12 @@ on:
       pushplus:
         description: 'whether to notify through pushplus'
         required: true
-        default: 'true'
+        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u 
+  TIME_ZONE: Asia/Shanghai
   TARGET_NAME: K2P
   FIRMWARE_AUTHOR: hanwckf
   FIRMWARE_PATH: /opt/firmwares
@@ -38,6 +39,7 @@ jobs:
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot kmod \
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
         pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+        sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
