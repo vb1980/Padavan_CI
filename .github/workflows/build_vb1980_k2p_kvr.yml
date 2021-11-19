@@ -1,4 +1,4 @@
-name: Build K2P kvr from vb1980 repo
+name: Build K2P kvr from vb1980 kvr repo
 
 on:
   workflow_dispatch:
@@ -8,28 +8,31 @@ on:
         required: true
         default: '20201015'
       busyboxver:
+        type: choice
         description: 'busybox''s version'
-        required: true
+        options:
+        - 1.24.x
+        - 1.34.1
         default: '1.24.x'
       mobileui:
+        type: boolean
         description: 'whether to apply mobile ui patch for original ui'
-        required: true
         default: 'false'
       ssp:
+        type: boolean
         description: 'whether to apply the patch for download ssp bin from local or remote url'
-        required: true
         default: 'true'
       uploadcow:
+        type: boolean
         description: 'whether to upload firmware to cowtransfer'
-        required: true
         default: 'true'
       uploadwet:
+        type: boolean
         description: 'whether to upload firmware to wettransfer'
-        required: true
         default: 'false'
       pushplus:
+        type: boolean
         description: 'whether to notify through pushplus'
-        required: true
         default: 'false'
 env:
   REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
