@@ -8,24 +8,27 @@ on:
         required: true
         default: '20210816'
       busyboxver:
+        type: choice
         description: 'busybox''s version'
-        required: true
+        options:
+        - 1.24.x
+        - 1.34.1
         default: '1.24.x'
       rainbowui:
+        type: boolean
         description: 'whether to apply rainbow ui'
-        required: true
         default: 'true'
       uploadcow:
+        type: boolean
         description: 'whether to upload firmware to cowtransfer'
-        required: true
         default: 'true'
       uploadwet:
+        type: boolean
         description: 'whether to upload firmware to wettransfer'
-        required: true
         default: 'false'
       pushplus:
+        type: boolean
         description: 'whether to notify through pushplus'
-        required: true
         default: 'true'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
