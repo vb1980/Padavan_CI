@@ -4,16 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       uploadcow:
+        type: boolean
         description: 'whether to upload firmware to cowtransfer'
-        required: true
         default: 'true'
       uploadwet:
+        type: boolean
         description: 'whether to upload firmware to wettransfer'
-        required: true
         default: 'false'
       pushplus:
+        type: boolean
         description: 'whether to notify through pushplus'
-        required: true
         default: 'true'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/rt-n56u.git
