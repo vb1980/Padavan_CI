@@ -219,7 +219,7 @@ jobs:
       run: |
         cd $WORK_PATH/trunk
         sudo ./clear_tree
-        sudo ./build_firmware_modify $TARGET_NAME 0
+        sudo ./build_firmware_modify ${{ github.event.inputs.targetname }} 0
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
       id: organize
