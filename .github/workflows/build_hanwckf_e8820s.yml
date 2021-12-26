@@ -70,10 +70,17 @@ jobs:
     - name: Organize firmware files
       id: organize
       run: |
+        echo "dateprefix=$(date +"%Y%m%d")" >> $GITHUB_ENV
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
-        for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"$firmwarefile
+        #for firmwarefile in $(ls *.trx)
+        #do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"$firmwarefile
+        #done
+        for firmwarefile in $(ls ${{ github.event.inputs.target }}.trx)
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.trx
+        done
+        for md5file in $(ls *.md5)
+        do sudo mv $md5file $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.md5
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
