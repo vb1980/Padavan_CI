@@ -1,0 +1,177 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f1f4f5;
+  background-repeat: no-repeat;
+  font-family: sans-serif;
+  height: 100vh;
+}
+
+body.bg0 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN);
+}
+body.bg1 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=1&mkt=zh-CN);
+}
+body.bg2 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=2&mkt=zh-CN);
+}
+body.bg3 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=3&mkt=zh-CN);
+}
+body.bg4 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=4&mkt=zh-CN);
+}
+body.bg5 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=5&mkt=zh-CN);
+}
+body.bg6 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=6&mkt=zh-CN);
+}
+body.bg7 {
+  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=7&mkt=zh-CN);
+}
+
+.login-box {
+  width: 320px;
+  height: 400px;
+  background: #fff;
+  color: rgb(132,119,116);
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  padding: 70px 30px;
+  filter: alpha(opacity=60);
+  -moz-opacity: 0.6;
+  -khtml-opacity: 0.6;
+  opacity: 0.6;
+}
+
+.login-box.no-opacity{
+  filter: alpha(opacity=100);
+  -moz-opacity: 1;
+  -khtml-opacity: 1;
+  opacity: 1;
+}
+
+.login-box .avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  top: -50px;
+  left: calc(50% - 50px);
+}
+
+.login-box h1 {
+  margin: 0;
+  padding: 0 0 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.login-box label {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+  display: block;
+}
+
+.login-box input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-box input[type="text"], .login-box input[type="password"] {
+  border: none;
+  border-bottom: 1px solid #fff;
+  border: 2px solid #e4eaec;
+  border-radius: 15px;
+  background: transparent;
+  outline: none;
+  height: 30px;
+  color: #76838f;
+  font-size: 16px;
+}
+
+.login-box input.error {
+  border: 2px solid #f00;
+}
+
+.login-box input[type="submit"] {
+  border: none;
+  outline: none;
+  height: 40px;
+  background: #ff0000;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+}
+
+.login-box input[type="submit"]:hover {
+  cursor: pointer;
+  color: #000;
+}
+
+.login-footer {
+  height: 10%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+@media screen and (max-width:800px){
+	/*body {
+		background-image: url(https://bing.ioliu.cn/v1/rand?w=480&h=800);
+	}*/
+	
+	form {
+		margin: 0 0 10px;
+	}
+
+	.login-box {
+	  width: 160px;
+	  height: 270px;
+	  top: 35%;
+	  padding: 35px 15px;
+	}
+	
+	.login-box .avatar {
+	  width: 50px;
+	  height: 50px;
+	  top: -25px;
+	  left: calc(50% - 25px);
+	}
+
+	.login-box h1 {
+	  padding: 0 0 5px;
+	  font-size: 12px;
+	  line-height: 24px;
+	}
+
+	.login-box label {
+	  font-size: 12px;
+	}
+
+	.login-box input {
+	  margin-bottom: 5px;
+	}
+
+	.login-box input[type="text"], .login-box input[type="password"] {
+	  border-radius: 7px;
+	  height: 15px;
+	  font-size: 12px;
+	  width: 94%;
+	}
+
+	.login-box input[type="submit"] {
+	  height: 25px;
+	  font-size: 12px;
+	  border-radius: 10px;
+	  margin-top: 10px;
+	  margin-bottom: 0px;
+	}
+}
