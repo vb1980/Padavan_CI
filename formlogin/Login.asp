@@ -23,8 +23,6 @@
     }
     
     $j(function () {
-      var bgClass = "bg" + getRandom();
-      $j('body').addClass(bgClass);
       $j('#user,#pwd').on('focus', function () {
         $j('.login-box').addClass('no-opacity');
         $j(this).removeClass('error');

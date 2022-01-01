@@ -5,31 +5,7 @@ body {
   background-repeat: no-repeat;
   font-family: sans-serif;
   height: 100vh;
-}
-
-body.bg0 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN);
-}
-body.bg1 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=1&mkt=zh-CN);
-}
-body.bg2 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=2&mkt=zh-CN);
-}
-body.bg3 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=3&mkt=zh-CN);
-}
-body.bg4 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=4&mkt=zh-CN);
-}
-body.bg5 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=5&mkt=zh-CN);
-}
-body.bg6 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=6&mkt=zh-CN);
-}
-body.bg7 {
-  background-image: url(https://bing.biturl.top/?resolution=1920&format=image&index=7&mkt=zh-CN);
+  background-image: url(https://bing.ioliu.cn/v1/rand);
 }
 
 .login-box {
