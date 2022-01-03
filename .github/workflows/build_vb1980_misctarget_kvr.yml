@@ -112,7 +112,7 @@ jobs:
     - name: Enable formlogin
       if: github.event.inputs.formlogin == 'true'
       run: |
-        cp -f formlogin/httpd.c $WORK_PATH/trunk/user/user/httpd
+        cp -f formlogin/httpd.c $WORK_PATH/trunk/user/httpd
         cp -f formlogin/favicon.png $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/images
         cp -f formlogin/Login.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         cp -f formlogin/Logout.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
