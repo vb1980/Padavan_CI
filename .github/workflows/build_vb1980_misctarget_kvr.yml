@@ -43,10 +43,6 @@ on:
         type: boolean
         description: 'whether enable formlogin instead of dialoglogin'
         default: 'false'
-      removevpn:
-        type: boolean
-        description: 'whether remove vpnserver vpnclient menus and pages'
-        default: 'false'
       ssp:
         type: boolean
         description: 'whether to apply the patch for download ssp bin from local or remote url'
@@ -122,15 +118,6 @@ jobs:
         cp -f formlogin/Logout.asp $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
         mkdir -p $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/login
         cp -f formlogin/login.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/login
-    - name: Remove vpn
-      if: github.event.inputs.removevpn == 'true'
-      run: |
-        cd $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
-        sed -i '$a\#mainMenu > #option1, #mainMenu > #option2 {display:none}' main.css
-        cd $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        rm -rf vpnsrv.asp
-        rm -rf vpncli.asp
-        rm -rf vpn_clients.asp
     - name: Recovery SSP bin files download from remote
       if: github.event.inputs.ssp == 'true'
       run: |
