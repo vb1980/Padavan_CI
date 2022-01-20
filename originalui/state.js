@@ -536,13 +536,18 @@ tabMenuHash.put('10', tabM9);
 //Level 1 Menu in Gateway, Router mode
 //生成子菜单 /L1 sub 与 L2 sub对应
 var menuL1 = [
-	{ "title": "<#menu1#>", "link": "index.asp", "icon": "icon-home" },
-	{ "title": "<#menu2#>", "link": "vpnsrv.asp", "icon": "icon-retweet" },
-	{ "title": "<#menu6#>", "link": "vpncli.asp", "icon": "icon-globe" },
-	{ "title": "<#menu4#>", "link": "Main_TrafficMonitor_realtime.asp", "icon": "icon-tasks" },
-	{ "title": "<#menu5_8#>", "link": "Advanced_System_Info.asp", "icon": "icon-random" },
-	{ "title": "<#menu5#>", "link": "as.asp", "icon": "icon-wrench" }
+	{ "title": "<#menu1#>", "link": "index.asp", "icon": "icon-home" }
 ];
+if (found_app_vpnsvr()) {
+  menuL1.push({ "title": "<#menu2#>", "link": "vpnsrv.asp", "icon": "icon-retweet" });
+}
+if (found_app_vpncli()) {
+  menuL1.push({ "title": "<#menu6#>", "link": "vpncli.asp", "icon": "icon-globe" });
+}
+menuL1.push({ "title": "<#menu4#>", "link": "Main_TrafficMonitor_realtime.asp", "icon": "icon-tasks" });
+menuL1.push({ "title": "<#menu5_8#>", "link": "Advanced_System_Info.asp", "icon": "icon-random" });
+menuL1.push({ "title": "<#menu5#>", "link": "as.asp", "icon": "icon-wrench" });
+
 //Level 2 Menu
 //sub 与 L1的sub 对应，自动显示到L1下面
 var menuL2 = [
