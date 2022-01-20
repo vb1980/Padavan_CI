@@ -14,10 +14,6 @@ on:
         - 1.24.x
         - 1.34.1
         default: '1.24.x'
-      mobileui:
-        type: boolean
-        description: 'whether to apply mobile ui patch for original ui'
-        default: 'false'
       ssp:
         type: boolean
         description: 'whether to apply the patch for download ssp bin from local or remote url'
@@ -79,12 +75,6 @@ jobs:
         sed -i "s/SRC_NAME=busybox.*/SRC_NAME=busybox-1.24.x/g" ./Makefile
         cd $WORK_PATH/trunk
         sed -i "s/busybox_id=\"1.34.1\"/busybox_id=\"1.24.x\"/g" ./build_firmware_modify
-    - name: Apply mobile compatible
-      if: github.event.inputs.mobileui == 'true'
-      run: |
-        cp -f originalui/main.css $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/css
-        cp -f originalui/popup.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
-        cp -f originalui/state.js $WORK_PATH/trunk/user/www/n56u_ribbon_fixed
     - name: Recovery SSP bin files download from remote
       if: github.event.inputs.ssp == 'true'
       run: |
