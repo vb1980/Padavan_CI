@@ -59,6 +59,13 @@ jobs:
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
         sudo timedatectl set-timezone "$TIME_ZONE"
+    - name: Clone source code
+      run: |
+        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        cd $WORK_PATH/toolchain-mipsel
+        mkdir -p toolchain-4.4.x
+        wget $TOOLCHAIN_URL
+        tar -xf mipsel-linux-uclibc.tar.xz -C toolchain-4.4.x
     - name: Parse json string of include plugins
       run: |
         echo "vpnsvr=${{fromJson(github.event.inputs.plugins).vpnsvr}}" >> $GITHUB_ENV
@@ -160,7 +167,6 @@ jobs:
         sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${{ github.event.inputs.firmwarever }}/g" ./versions.inc
         echo '更新版本号时间'
         #########################################################################################
-        cat .config
     - name: Build firmware
       run: |
         cd $WORK_PATH/trunk
