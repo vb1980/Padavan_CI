@@ -1,8 +1,55 @@
-name: Build R2100 from hanwckf repo
+name: Build hanwckf's kernal3.x Padavan
 
 on:
   workflow_dispatch:
     inputs:
+      target:
+        type: choice
+        description: 'target to compile'
+        options:
+        - PSG1208
+        - PSG1218
+        - 5K-W20
+        - OYE-001
+        - NEWIFI-MINI
+        - MI-MINI
+        - MI-3
+        - MI-3C
+        - MI-4
+        - MI-R3G
+        - MI-R4A
+        - MI-R3P
+        - HC5661A
+        - HC5761A
+        - HC5861B
+        - 360P2
+        - MI-NANO
+        - MZ-R13
+        - MZ-R13P
+        - RT-AC1200GU
+        - XY-C1
+        - WR1200JS
+        - NEWIFI3
+        - B70
+        - A3004NS
+        - K2P
+        - K2P-USB
+        - JCG-836PRO
+        - JCG-AC860M
+        - DIR-882
+        - DIR-878
+        - MR2600
+        - WDR7300
+        - RM2100
+        - CR660x
+        - R2100
+        - JCG-Y2
+        - E8820V2
+        - ZTE_E8820S
+        - MSG1500
+        - R6220
+        - NETGEAR-CHJ
+        - NETGEAR-BZV
       uploadcow:
         type: boolean
         description: 'whether to upload firmware to cowtransfer'
@@ -14,13 +61,12 @@ on:
       pushplus:
         type: boolean
         description: 'whether to notify through pushplus'
-        default: 'false'
+        default: 'true'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/rt-n56u
   TIME_ZONE: Asia/Shanghai
-  TARGET_NAME: R2100
   FIRMWARE_AUTHOR: hanwckf
   FIRMWARE_PATH: /opt/firmwares
 jobs:
@@ -56,24 +102,24 @@ jobs:
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
-        if [ ! -f configs/templates/$TARGET_NAME.config ] ; then
-        echo "configs/templates/${TARGET_NAME}.config not found"
+        if [ ! -f configs/templates/${{ github.event.inputs.target }}.config ] ; then
+        echo "configs/templates/${{ github.event.inputs.target }}.config not found"
         exit 1
         fi
-        cp -f configs/templates/$TARGET_NAME.config .config
+        cp -f configs/templates/${{ github.event.inputs.target }}.config .config
         sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${FIRMWARE_VERSION}/g" ./versions.inc
     - name: Build firmware
       run: |
         cd $WORK_PATH/trunk
         ./clear_tree
-        fakeroot ./build_firmware_modify $TARGET_NAME
+        fakeroot ./build_firmware_modify ${{ github.event.inputs.target }}
     - name: Organize firmware files
       id: organize
       run: |
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"$firmwarefile
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ github.event.inputs.target }}"_kernal3.x.trx"
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -103,5 +149,5 @@ jobs:
       if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
       with:
         token: ${{ secrets.PUSHTOKEN }}
-        title: ${{ env.TARGET_NAME }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
+        title: ${{ github.event.inputs.target }}_Build_Completed
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ github.event.inputs.target }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
