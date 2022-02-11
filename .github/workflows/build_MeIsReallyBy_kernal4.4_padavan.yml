@@ -29,9 +29,9 @@ on:
         description: 'firmware''s version'
         required: true
         default: '20220205'
-      uploadcow:
+      uploadwet:
         type: boolean
-        description: 'whether to upload firmware to cowtransfer'
+        description: 'whether to upload firmware to wettransfer'
         default: 'true'
 env:
   REPOSITORY_URL: https://github.com/MeIsReallyBa/padavan-4.4.git
@@ -190,13 +190,13 @@ jobs:
       with:
         name: Padavan44-packages
         path: ${{ env.FIRMWARE }}
-    - name: Upload firmware to cowtransfer
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
+    - name: Upload firmware to WeTransfer
+      if: steps.organize.outputs.status == 'success' && ( env.UPLOAD_WETRANSFER == 'true' || github.event.inputs.uploadwet == 'true' )
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
-        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
+        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
       if: steps.organizer.outputs.status == 'success'

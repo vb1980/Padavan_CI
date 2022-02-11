@@ -18,14 +18,10 @@ on:
         type: boolean
         description: 'whether to apply the patch for download ssp bin from local or remote url'
         default: 'false'
-      uploadcow:
-        type: boolean
-        description: 'whether to upload firmware to cowtransfer'
-        default: 'true'
       uploadwet:
         type: boolean
         description: 'whether to upload firmware to wettransfer'
-        default: 'false'
+        default: 'true'
       pushplus:
         type: boolean
         description: 'whether to notify through pushplus'
@@ -219,20 +215,13 @@ jobs:
       with:
         name: Padavan-packages
         path: ${{ env.FIRMWARE }}
-    - name: Upload firmware to cowtransfer
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
-        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     - name: Upload firmware to WeTransfer
       if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
+        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
       if: steps.organizer.outputs.status == 'success'
@@ -245,4 +234,4 @@ jobs:
       with:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ env.TARGET_NAME }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮CowTransfer Download Url:${{ env.COWTRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮WetTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
