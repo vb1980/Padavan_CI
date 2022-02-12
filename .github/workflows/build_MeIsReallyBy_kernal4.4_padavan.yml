@@ -21,10 +21,11 @@ on:
         - MI-R3P
         - MI-R3G
         - XY-C1
+        - WR1200JS
       plugins:
         description: 'json format string of include configs'
         required: true
-        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","aldriver":"n","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
+        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","aldriver":"n","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -79,6 +80,7 @@ jobs:
         echo "dnsforwarder=${{fromJson(github.event.inputs.plugins).dnsforwarder}}" >> $GITHUB_ENV
         echo "adbyby=${{fromJson(github.event.inputs.plugins).adbyby}}" >> $GITHUB_ENV
         echo "adguardhome=${{fromJson(github.event.inputs.plugins).adguardhome}}" >> $GITHUB_ENV
+        echo "smartdns=${{fromJson(github.event.inputs.plugins).smartdns}}" >> $GITHUB_ENV
         echo "aliddns=${{fromJson(github.event.inputs.plugins).aliddns}}" >> $GITHUB_ENV
         echo "zerotier=${{fromJson(github.event.inputs.plugins).zerotier}}" >> $GITHUB_ENV
         echo "ddnsto=${{fromJson(github.event.inputs.plugins).ddnsto}}" >> $GITHUB_ENV
@@ -115,6 +117,7 @@ jobs:
         sed -i '/CONFIG_FIRMWARE_INCLUDE_DDNSTO/d' .config #删除配置项ddnsto
         sed -i '/CONFIG_FIRMWARE_INCLUDE_WIREGUARD/d' .config #删除配置项wireguard
         sed -i '/CONFIG_FIRMWARE_INCLUDE_ALDRIVER/d' .config #删除配置项阿里云盘
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config #删除配置项smartdns
         #校园网相关开始
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #删除配置项MENTOHUST
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #删除配置项SCUTCLIENT
@@ -144,6 +147,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_ADBYBY=${{env.adbyby}}" >> .config #adbyby plus+
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=${{env.adguardhome}}" >> .config #adguardhome
+        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=${{env.smartdns}}" >> .config #smartdns
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=${{env.aliddns}}" >> .config #阿里DDNS
         echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=${{env.zerotier}}" >> .config #zerotier ~1.3M
@@ -191,7 +195,7 @@ jobs:
         name: Padavan44-packages
         path: ${{ env.FIRMWARE }}
     - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && ( env.UPLOAD_WETRANSFER == 'true' || github.event.inputs.uploadwet == 'true' )
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
