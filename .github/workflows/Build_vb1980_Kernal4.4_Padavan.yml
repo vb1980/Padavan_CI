@@ -168,7 +168,7 @@ jobs:
         sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPS/d' .config #删除配置项frp server
         sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config #删除配置项frp client
         sed -i '/CONFIG_FIRMWARE_INCLUDE_ALDRIVER/d' .config #删除配置项阿里云盘
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SQM/d' .config #删除配置项阿里云盘
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SQM/d' .config #删除配置项QOS流控
         #校园网相关开始
         sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #删除配置项MENTOHUST
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #删除配置项SCUTCLIENT
@@ -208,7 +208,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_FRPC=${{env.frpc}}" >> .config #frp client
         #
         echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=${{env.aldriver}}" >> .config #阿里云盘
-        echo "CONFIG_FIRMWARE_INCLUDE_SQM=${{env.sqm}}" >> .config #阿里云盘
+        echo "CONFIG_FIRMWARE_INCLUDE_SQM=${{env.sqm}}" >> .config #QOS流控
         #
         #校园网相关开始
         echo "CONFIG_FIRMWARE_INCLUDE_MENTOHUST=${{env.mentohust}}" >> .config #MENTOHUST
