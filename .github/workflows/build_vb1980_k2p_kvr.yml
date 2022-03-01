@@ -20,7 +20,7 @@ on:
         default: 'true'
       uploadwet:
         type: boolean
-        description: 'whether to upload firmware to wettransfer'
+        description: 'whether to upload firmware to wetransfer'
         default: 'true'
       pushplus:
         type: boolean
@@ -65,12 +65,11 @@ jobs:
         sudo chmod 777 ./go.sh
         bash ./go.sh
     - name: Set busybox's version to compile
-      if: github.event.inputs.busyboxver == '1.24.x'
       run: |
         cd $WORK_PATH/trunk/user/busybox
-        sed -i "s/SRC_NAME=busybox.*/SRC_NAME=busybox-1.24.x/g" ./Makefile
+        sed -i "s/SRC_NAME=busybox.*/SRC_NAME=busybox-${{ github.event.inputs.busyboxver }}/g" ./Makefile
         cd $WORK_PATH/trunk
-        sed -i "s/busybox_id=\"1.34.1\"/busybox_id=\"1.24.x\"/g" ./build_firmware_modify
+        sed -i "s/busybox_id=.*/busybox_id=\"${{ github.event.inputs.busyboxver }}\"/g" ./build_firmware_modify
     - name: Recovery SSP bin files download from remote
       if: github.event.inputs.ssp == 'true'
       run: |
@@ -239,4 +238,4 @@ jobs:
       with:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ env.TARGET_NAME }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮WetTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮WeTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

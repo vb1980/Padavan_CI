@@ -22,7 +22,7 @@ on:
         - XY-C1
       uploadwet:
         type: boolean
-        description: 'whether to upload firmware to wettransfer'
+        description: 'whether to upload firmware to wetransfer'
         default: 'true'
       pushplus:
         type: boolean
@@ -110,4 +110,4 @@ jobs:
       with:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ github.event.inputs.target }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ github.event.inputs.target }}** padavan(4.4 kernal) firmware build completed!<br/>&nbsp;&nbsp;🐮WetTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
+        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ github.event.inputs.target }}** padavan(4.4 kernal) firmware build completed!<br/>&nbsp;&nbsp;🐮WeTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!
