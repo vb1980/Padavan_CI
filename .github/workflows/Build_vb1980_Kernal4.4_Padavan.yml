@@ -44,6 +44,10 @@ on:
         type: boolean
         description: 'whether to apply specialized logo for e8820s or a-040w-q'
         default: 'true'
+      changebrandlogo:
+      	type: boolean
+        description: 'change brand logo image for specialized router'
+        default: 'false'
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -112,6 +116,15 @@ jobs:
                 cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_red.png
                 cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_yellow.png
             fi
+        fi
+    - name: Change specialized brand logo image
+      if: github.event.inputs.changebrandlogo == 'true'
+      run: |
+        cd $WORK_PATH/trunk
+        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
+            sudo ./change_logo.sh ${{ github.event.inputs.target }} 0
+        else
+            sudo ./change_logo.sh ${{ github.event.inputs.target }}
         fi
     - name: Parse json string of include plugins
       run: |
