@@ -31,7 +31,15 @@ on:
         - WR1200JS
         - NEWIFI
         - XY-C1
+        - GHL
         default: ZTE-E8820S
+      branch:
+        type: choice
+        description: 'branch to compile'
+        options:
+        - main
+        - upgradelibs
+        default: upgradelibs
       plugins:
         description: 'json format string of include configs'
         required: true
@@ -84,7 +92,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        git clone -b ${{ github.event.inputs.branch }} --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH/toolchain-mipsel
         mkdir -p toolchain-4.4.x
         wget $TOOLCHAIN_URL
