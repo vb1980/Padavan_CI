@@ -53,7 +53,7 @@ on:
         description: 'whether to apply specialized logo for e8820s or a-040w-q'
         default: 'true'
       changebrandlogo:
-      	type: boolean
+        type: boolean
         description: 'change brand logo image for specialized router'
         default: 'false'
       firmwarever:
