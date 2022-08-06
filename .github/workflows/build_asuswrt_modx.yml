@@ -1,0 +1,109 @@
+name: Build Asuswrt-Modx
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: 'target to build'
+        options:
+        - RT-MIR3G
+        - RT-MIR3P
+        - RT-MIR4A
+        - RT-RM2100
+        - RT-R2100
+        - RT-NEWIFI2
+        - RT-XYC3
+        - RT-NEWIFI3
+        - RT-JDC1
+        - RT-HIWIFI4
+        - RT-E8820S
+        - RT-A040WQ
+        - RT-MSG1500
+      uploadcow:
+        type: boolean
+        description: 'whether to upload firmware to cowtransfer'
+        default: 'true'
+      uploadwet:
+        type: boolean
+        description: 'whether to upload firmware to wettransfer'
+        default: 'false'
+env:
+  REPOSITORY_URL: https://github.com/stkuroneko/asuswrt-mt7621at.git
+  WORK_PATH: /opt/asuswrt-modx
+  TIME_ZONE: Asia/Shanghai
+  FIRMWARE_PATH: /opt/firmwares
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/git-core-ubuntu-ppa-xenial.list
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install libncurses5 libncurses5-dev m4 bison gawk flex libstdc++-4.8-dev g++-multilib g++ \
+        gengetopt git gitk zlib1g-dev autoconf autopoint libtool shtool autogen mtd-utils intltool sharutils \
+        docbook-xsl-* libstdc++5 texinfo dos2unix xsltproc binutils u-boot-tools device-tree-compiler python \
+        qemu gperf liblzo2-dev uuid-dev build-essential lzma-dev liblzma-dev lzma patch cmake intltool yodl yodl-doc \
+        libglib2.0-dev gtk-doc-tools libc6-i386 lib32stdc++6 lib32z1 libelf1:i386 lib32ncurses5 libc6-dev-i386 libstdc++6:i386
+        sudo timedatectl set-timezone "$TIME_ZONE"
+    - name: Clone source code
+      run: |
+        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+    - name: Build
+      run: |
+        sudo cp -f bashScripts/asuswrt_build.sh $WORK_PATH/build.sh
+        cd $WORK_PATH
+        sudo chmod 777 ./build.sh
+        bash ./build.sh ${{ github.event.inputs.target }}
+        #sudo make ${{ github.event.inputs.target }}
+        echo "dateprefix=$(date +"%Y%m%d")" >> $GITHUB_ENV
+    - name: Organize firmware files
+      id: organize
+      run: |
+        mkdir -p $FIRMWARE_PATH/
+        cd $WORK_PATH/release/src-ra-5010/image
+        for firmwarefile in $(ls *.trx)
+        do sudo mv -f $firmwarefile $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.trx
+        done
+        for md5file in $(ls *.md5)
+        do sudo mv -f $md5file $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.md5
+        done
+        cd $FIRMWARE_PATH
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+    - name : Upload packages
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success'
+      with:
+        name: Asuswrt-packages
+        path: ${{ env.FIRMWARE }}
+    - name: Upload firmware to cowtransfer
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadcow == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+        echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+    - name: Upload firmware to WeTransfer
+      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+    - name: Remove obsolete firmwares on artifacts
+      uses: c-hive/gha-remove-artifacts@v1.2.0
+      if: steps.organizer.outputs.status == 'success'
+      with:
+        age: '1 day'
+        skip-recent: 5

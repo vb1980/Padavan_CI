@@ -1,4 +1,4 @@
-name: Build vb1980's Kernal4.4 Padavan
+name: Build vb1980's kernal4.4 Padavan
 
 on:
   workflow_dispatch:
@@ -29,6 +29,7 @@ on:
         - MI-4
         - RT-AC85P
         - WR1200JS
+        - WR330
         - NEWIFI
         - XY-C1
         - GHL
@@ -50,7 +51,7 @@ on:
         default: 'true'
       specializedlogo:
         type: boolean
-        description: 'whether to apply specialized logo for e8820s or a-040w-q'
+        description: 'whether to apply specialized logo for e8820s or a-040w-q or msg1500'
         default: 'true'
       changebrandlogo:
         type: boolean
@@ -113,6 +114,9 @@ jobs:
         if [ "${{ github.event.inputs.target }}" = "ZTE-E8820S" ]; then
         logoFile="e8820s/zte_asus_logo.png"
         fi
+        if [ "${{ github.event.inputs.target }}" = "MSG1500" ]; then
+        logoFile="msg1500/raisecom_asus_logo.png"
+        fi
         if [ -n "$logoFile" ]; then
             cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
             if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
@@ -126,7 +130,7 @@ jobs:
             fi
         fi
     - name: Change specialized brand logo image
-      if: github.event.inputs.changebrandlogo == 'true'
+      if: github.event.inputs.changebrandlogo == 'true' && github.event.inputs.specializedlogo == 'false'
       run: |
         cd $WORK_PATH/trunk
         if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
