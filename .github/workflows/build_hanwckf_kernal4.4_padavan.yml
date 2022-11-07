@@ -90,15 +90,15 @@ jobs:
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
+        echo "STATUS=success" >> $GITHUB_ENV
     - name : Upload packages
       uses: actions/upload-artifact@master
-      if: steps.organize.outputs.status == 'success'
+      if: env.STATUS == 'success'
       with:
         name: Padavan44-packages
         path: ${{ env.FIRMWARE }}
     - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadwet == 'true'
+      if: env.STATUS == 'success' && github.event.inputs.uploadwet == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -106,7 +106,7 @@ jobs:
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: PushPlus Notification
       uses: vb1980/Action_PushPlus@master
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
+      if: env.STATUS == 'success' && github.event.inputs.pushplus == 'true'
       with:
         token: ${{ secrets.PUSHTOKEN }}
         title: ${{ github.event.inputs.target }}_Build_Completed
