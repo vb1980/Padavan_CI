@@ -24,6 +24,7 @@ on:
         - DIR-882
         - MR2600
         - MI-R3P
+        - MI-R3P-SPI
         - MI-R3G
         - MI-R3G-PB
         - MI-4
@@ -33,14 +34,11 @@ on:
         - NEWIFI
         - XY-C1
         - GHL
+        - QM-B1
+        - E8820V2
+        - MSG1500-Z
+        - TX1801
         default: ZTE-E8820S
-      branch:
-        type: choice
-        description: 'branch to compile'
-        options:
-        - main
-        - upgradelibs
-        default: upgradelibs
       plugins:
         description: 'json format string of include configs'
         required: true
@@ -51,7 +49,7 @@ on:
         default: 'true'
       specializedlogo:
         type: boolean
-        description: 'whether to apply specialized logo for e8820s or a-040w-q or msg1500'
+        description: 'whether to apply specialized logo for e8820s or a-040w-q'
         default: 'true'
       changebrandlogo:
         type: boolean
@@ -67,7 +65,6 @@ on:
         default: 'true'
 env:
   REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
-  TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/linux-4.4-v1.0/mipsel-linux-uclibc.tar.xz
   WORK_PATH: /opt/padavan-4.4
   TIME_ZONE: Asia/Shanghai
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
@@ -89,15 +86,18 @@ jobs:
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
-        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev
         sudo timedatectl set-timezone "$TIME_ZONE"
+    - name: Set golang
+      run: |
+        cp -f bashScripts/go.sh $(pwd)
+        sudo chmod 777 ./go.sh
+        bash ./go.sh
     - name: Clone source code
       run: |
-        git clone -b ${{ github.event.inputs.branch }} --depth=1 $REPOSITORY_URL $WORK_PATH
-        cd $WORK_PATH/toolchain-mipsel
-        mkdir -p toolchain-4.4.x
-        wget $TOOLCHAIN_URL
-        tar -xf mipsel-linux-uclibc.tar.xz -C toolchain-4.4.x
+        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        cd $WORK_PATH
+        sed -i '/cp -f/d' Makefile
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
@@ -252,9 +252,8 @@ jobs:
         #########################################################################################
     - name: Build firmware
       run: |
-        cd $WORK_PATH/trunk
-        sudo ./clear_tree
-        sudo ./build_firmware_modify ${{ github.event.inputs.target }} 0
+        cd $WORK_PATH
+        sudo make ${{ github.event.inputs.target }}
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
       id: organize
@@ -270,15 +269,15 @@ jobs:
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
+        echo "STATUS=success" >> $GITHUB_ENV
     - name : Upload packages
       uses: actions/upload-artifact@main
-      if: steps.organize.outputs.status == 'success'
+      if: env.STATUS == 'success'
       with:
         name: Padavan44-packages
         path: ${{ env.FIRMWARE }}
     - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && ( env.UPLOAD_WETRANSFER == 'true' || github.event.inputs.uploadwet == 'true' )
+      if: env.STATUS == 'success' && ( env.UPLOAD_WETRANSFER == 'true' || github.event.inputs.uploadwet == 'true' )
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -286,7 +285,7 @@ jobs:
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.2.0
-      if: steps.organizer.outputs.status == 'success'
+      if: env.STATUS == 'success'
       with:
         age: '1 day'
         skip-recent: 5
