@@ -26,10 +26,6 @@ on:
         type: boolean
         description: 'whether to upload firmware to wetransfer'
         default: 'true'
-      pushplus:
-        type: boolean
-        description: 'whether to notify through pushplus'
-        default: 'false'
 env:
   REPOSITORY_URL: https://vb1980:${{ secrets.PRIVREPOTOKEN }}@github.com/vb1980/my-padavan.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -238,15 +234,8 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+      uses: c-hive/gha-remove-artifacts@v1.3.0
       if: steps.organizer.outputs.status == 'success'
       with:
         age: '1 day'
         skip-recent: 5
-    - name: PushPlus Notification
-      uses: vb1980/Action_PushPlus@master
-      if: steps.organize.outputs.status == 'success' && github.event.inputs.pushplus == 'true'
-      with:
-        token: ${{ secrets.PUSHTOKEN }}
-        title: ${{ env.TARGET_NAME }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ env.TARGET_NAME }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮WeTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

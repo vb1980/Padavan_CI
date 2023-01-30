@@ -24,10 +24,6 @@ on:
         type: boolean
         description: 'whether to upload firmware to wetransfer'
         default: 'true'
-      pushplus:
-        type: boolean
-        description: 'whether to notify through pushplus'
-        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/padavan-4.4.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/linux-4.4-v1.0/mipsel-linux-uclibc.tar.xz
@@ -104,10 +100,3 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
-    - name: PushPlus Notification
-      uses: vb1980/Action_PushPlus@master
-      if: env.STATUS == 'success' && github.event.inputs.pushplus == 'true'
-      with:
-        token: ${{ secrets.PUSHTOKEN }}
-        title: ${{ github.event.inputs.target }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ github.event.inputs.target }}** padavan(4.4 kernal) firmware build completed!<br/>&nbsp;&nbsp;🐮WeTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

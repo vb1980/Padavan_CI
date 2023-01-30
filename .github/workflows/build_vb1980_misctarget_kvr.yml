@@ -31,7 +31,7 @@ on:
       plugins:
         description: 'json format string of include configs'
         required: true
-        default: '{"vpnsvr":"y","vpncli":"y","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"y","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldriver":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
+        default: '{"vpnsvr":"y","vpncli":"y","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"y","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       firmwarever:
         description: 'firmware''s version'
         required: true
@@ -55,10 +55,6 @@ on:
         type: boolean
         description: 'whether to upload firmware to wetransfer'
         default: 'true'
-      pushplus:
-        type: boolean
-        description: 'whether to notify through pushplus'
-        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/vb1980/Padavan-KVR.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -148,7 +144,7 @@ jobs:
         echo "ddnsto=${{fromJson(github.event.inputs.plugins).ddnsto}}" >> $GITHUB_ENV
         echo "wireguard=${{fromJson(github.event.inputs.plugins).wireguard}}" >> $GITHUB_ENV
         echo "frpc=${{fromJson(github.event.inputs.plugins).frpc}}" >> $GITHUB_ENV
-        echo "aldriver=${{fromJson(github.event.inputs.plugins).aldriver}}" >> $GITHUB_ENV
+        echo "aldrive=${{fromJson(github.event.inputs.plugins).aldrive}}" >> $GITHUB_ENV
         echo "mentohust=${{fromJson(github.event.inputs.plugins).mentohust}}" >> $GITHUB_ENV
         echo "scutclient=${{fromJson(github.event.inputs.plugins).scutclient}}" >> $GITHUB_ENV
         echo "njitclient=${{fromJson(github.event.inputs.plugins).njitclient}}" >> $GITHUB_ENV
@@ -236,7 +232,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_DDNSTO=${{env.ddnsto}}" >> .config #DDNSTO
         echo "CONFIG_FIRMWARE_INCLUDE_WIREGUARD=${{env.wireguard}}" >> .config #WIREGUARD
         #
-        echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=${{env.aldriver}}" >> .config #阿里云盘
+        echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=${{env.aldrive}}" >> .config #阿里云盘
         #
         echo "CONFIG_FIRMWARE_INCLUDE_CADDY=n" >> .config #在线文件管理服务
         echo "CONFIG_FIRMWARE_INCLUDE_CADDYBIN=n" >> .config #集成caddu执行文件，此文件有13M,请注意固件大小。如果不集成，会从网上下载下来执行，不影响正常使用
@@ -290,15 +286,8 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+      uses: c-hive/gha-remove-artifacts@v1.3.0
       if: env.STATUS == 'success'
       with:
         age: '1 day'
         skip-recent: 5
-    - name: PushPlus Notification
-      uses: vb1980/Action_PushPlus@master
-      if: env.STATUS == 'success' && github.event.inputs.pushplus == 'true'
-      with:
-        token: ${{ secrets.PUSHTOKEN }}
-        title: ${{ github.event.inputs.targetname }}_Build_Completed
-        content: Congratulations,<br/>&nbsp;&nbsp;Your **${{ github.event.inputs.targetname }}** padavan firmware build completed!<br/>&nbsp;&nbsp;🐮WeTransfer Download Url:${{ env.WETRANSFER_URL }}<br/>&nbsp;&nbsp;Enjoy it🎈🎁!

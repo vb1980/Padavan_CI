@@ -42,7 +42,7 @@ on:
       plugins:
         description: 'json format string of include configs'
         required: true
-        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldriver":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
+        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       rainbowui:
         type: boolean
         description: 'whether to apply rainbow ui'
@@ -157,7 +157,7 @@ jobs:
         echo "ddnsto=${{fromJson(github.event.inputs.plugins).ddnsto}}" >> $GITHUB_ENV
         echo "wireguard=${{fromJson(github.event.inputs.plugins).wireguard}}" >> $GITHUB_ENV
         echo "frpc=${{fromJson(github.event.inputs.plugins).frpc}}" >> $GITHUB_ENV
-        echo "aldriver=${{fromJson(github.event.inputs.plugins).aldriver}}" >> $GITHUB_ENV
+        echo "aldrive=${{fromJson(github.event.inputs.plugins).aldrive}}" >> $GITHUB_ENV
         echo "sqm=${{fromJson(github.event.inputs.plugins).sqm}}" >> $GITHUB_ENV
         echo "mentohust=${{fromJson(github.event.inputs.plugins).mentohust}}" >> $GITHUB_ENV
         echo "scutclient=${{fromJson(github.event.inputs.plugins).scutclient}}" >> $GITHUB_ENV
@@ -232,7 +232,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #frp server
         echo "CONFIG_FIRMWARE_INCLUDE_FRPC=${{env.frpc}}" >> .config #frp client
         #
-        echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=${{env.aldriver}}" >> .config #阿里云盘
+        echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=${{env.aldrive}}" >> .config #阿里云盘
         echo "CONFIG_FIRMWARE_INCLUDE_SQM=${{env.sqm}}" >> .config #QOS流控
         #
         #校园网相关开始
@@ -284,7 +284,7 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
     - name: Remove obsolete firmwares on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.2.0
+      uses: c-hive/gha-remove-artifacts@v1.3.0
       if: env.STATUS == 'success'
       with:
         age: '1 day'
