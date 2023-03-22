@@ -1,0 +1,61 @@
+name: Build plan_b
+
+on: 
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Build plan_b'
+        required: true
+        default: 'build'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Setup golang version
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.20'
+
+    - name: Initialization environment
+      run: |
+        sudo apt-get update
+        sudo apt install upx git -y
+
+    - name: Clone&Build xray source code
+      run: |
+        git clone --depth=1 https://github.com/xtls/xray-core.git xray-core
+        cd xray-core/main
+        #GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray
+        GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray -trimpath -ldflags "-s -w -buildid=" ./
+        cd ../../xraybin
+        upx -9 xray
+        shopt -s extglob
+        rm -vrf !("xray")
+        echo "xray=$PWD" >> $GITHUB_ENV
+        
+    - name: Clone&Build plan_b
+      run: |
+        git clone --depth=1 https://github.com/zusterben/plan_b
+        mkdir plan_b/helloworld/bin
+        sudo sed -i '/arch_list="mips arm armng arm64 mipsle"/arch_list="mipsle"' plan_b/build.sh
+        sudo sed -i '/sync_xray_binary $arch/d' plan_b/build.sh
+        sudo sed -i '/do_backup $arch/d' plan_b/build.sh
+        sudo cp -f ${{env.xray}}/xray plan_b/bin_arch/mipsle
+        sudo chmod +x plan_b/bin_arch/mipsle/xray
+        cd plan_b
+        sudo bash ./build.sh
+        cd bin/mipsle
+        echo "helloworld=$PWD" >> $GITHUB_ENV
+        echo "STATUS=success" >> $GITHUB_ENV
+        
+    - name : Upload packages
+      uses: actions/upload-artifact@main
+      if: env.STATUS == 'success'
+      with:
+        name: helloworld-packages
+        path: ${{ env.helloworld }}

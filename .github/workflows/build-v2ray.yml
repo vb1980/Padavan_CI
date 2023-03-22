@@ -33,7 +33,7 @@ jobs:
         shopt -s extglob
         rm -vrf !("v2ray")
         echo "v2ray=$(pwd)" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
+        echo "STATUS=success" >> $GITHUB_ENV
     - name : Upload packages
       uses: actions/upload-artifact@main
       if: steps.upx.outputs.status == 'success'

@@ -38,7 +38,10 @@ on:
         - E8820V2
         - MSG1500-Z
         - TX1801
-        default: ZTE-E8820S
+        - RE-CP-02
+        - SIM-AX1800T
+        - HAR-20S2U1
+        default: SIM-AX1800T
       plugins:
         description: 'json format string of include configs'
         required: true
@@ -46,11 +49,11 @@ on:
       rainbowui:
         type: boolean
         description: 'whether to apply rainbow ui'
-        default: 'true'
+        default: 'false'
       specializedlogo:
         type: boolean
         description: 'whether to apply specialized logo for e8820s or a-040w-q'
-        default: 'true'
+        default: 'false'
       changebrandlogo:
         type: boolean
         description: 'change brand logo image for specialized router'

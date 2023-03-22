@@ -19,7 +19,7 @@ jobs:
     - name: Setup golang version
       uses: actions/setup-go@v2
       with:
-        go-version: '1.18.1'
+        go-version: '1.19'
 
     - name: Initialization environment
       run: |
@@ -38,11 +38,11 @@ jobs:
         shopt -s extglob
         rm -vrf !("xray")
         echo "xray=$PWD" >> $GITHUB_ENV
-        echo "::set-output name=status::success"
+        echo "STATUS=success" >> $GITHUB_ENV
 
     - name : Upload packages
       uses: actions/upload-artifact@main
-      if: steps.build.outputs.status == 'success'
+      if: env.STATUS == 'success'
       with:
         name: xray-packages
         path: ${{ env.xray }}
