@@ -8,6 +8,7 @@ on:
         description: 'target to compile'
         options:
         - ZTE-E8820S
+        - NEWIFI3
         - MSG1500
         - BELL-A040WQ
         - B70
@@ -67,7 +68,7 @@ on:
         description: 'whether to upload firmware to wetransfer'
         default: 'true'
 env:
-  REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
+  REPOSITORY_URL: https://github.com/xiaiohuan/padavan-4.4.git
   WORK_PATH: /opt/padavan-4.4
   TIME_ZONE: Asia/Shanghai
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
