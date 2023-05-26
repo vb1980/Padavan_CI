@@ -3,23 +3,23 @@ name: Build Xray
 on: 
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Build xray for padavan'
-        required: true
-        default: 'build'
+      uploadanon:
+        type: boolean
+        description: 'whether to upload to anonfiles'
+        default: 'false'
 jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@main
+    - uses: actions/checkout@v3
 
-    - name: Setup golang version
-      uses: actions/setup-go@v2
+    - uses: actions/setup-go@v4
       with:
-        go-version: '1.19'
+        go-version: '1.20'
+        check-latest: true
+        cache-dependency-path: '**/go.sum'
 
     - name: Initialization environment
       run: |
@@ -31,7 +31,6 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/xtls/xray-core.git xray-core
         cd xray-core/main
-        #GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray
         GOOS=linux GOARCH=mipsle go build -o ../../xraybin/xray -trimpath -ldflags "-s -w -buildid=" ./
         cd ../../xraybin
         #upx -9 xray
@@ -46,3 +45,17 @@ jobs:
       with:
         name: xray-packages
         path: ${{ env.xray }}
+        
+    - name: Upload xray bin to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer anon --no-progress ${v2ray} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
+        
+    - name: Remove obsolete xray(s) on artifacts
+      uses: c-hive/gha-remove-artifacts@v1.3.0
+      if: env.STATUS == 'success'
+      with:
+        age: '1 day'
+        skip-recent: 5

@@ -7,41 +7,55 @@ on:
         type: choice
         description: 'target to compile'
         options:
-        - ZTE-E8820S
-        - MSG1500
-        - BELL-A040WQ
-        - B70
-        - K2P
-        - R2100
-        - RM2100
-        - K2P-USB
-        - CR660x
-        - JCG-Q20
-        - JCG-AC860M
-        - JCG-AC876M
-        - JCG-Y2
-        - DIR-878
-        - DIR-882
-        - MR2600
-        - MI-R3P
-        - MI-R3P-SPI
-        - MI-R3G
-        - MI-R3G-PB
-        - MI-4
-        - RT-AC85P
-        - WR1200JS
-        - WR330
-        - NEWIFI
-        - XY-C1
-        - GHL
-        - QM-B1
-        - E8820V2
-        - MSG1500-Z
-        - TX1801
-        - RE-CP-02
-        - SIM-AX1800T
-        - HAR-20S2U1
-        default: SIM-AX1800T
+        - Gee_B70
+        - Nokia-Sbell_A-040W-Q
+        - Xiaomi_CR6606
+        - Xiaomi_CR6608
+        - Xiaomi_CR6609
+        - DLINK_DIR-878
+        - DLINK_DIR-882
+        - ZTE_E8820V2
+        - Linksys_EA7500
+        - GHL_R-001
+        - Hair_HAR-20S2U1
+        - JCG_836PRO
+        - JCG_AC860M
+        - JCQ_Q20-PB
+        - JCQ_Q20
+        - JCQ_Q10Pro
+        - JCG_Y2
+        - JDCloud_Luban
+        - JDCloud_1
+        - Phicomm_K2P-NANO
+        - Phicomm_K2P-USB
+        - Phicomm_K2P
+        - Xiaomi_4
+        - Xiaomi_R3G
+        - Xiaomi_R3P-PB
+        - Xiaomi_R3P-SPI
+        - Xiaomi_R3P
+        - Xiaomi_R4A
+        - Motorola_MR2600
+        - Raisecom_MSG1500_Z.00
+        - Raisecom_MSG1500_X.00
+        - Lenovo_NEWIFI2
+        - Diting_NEWIFI3
+        - QianmoBus_B1
+        - Xiaomi_AC2100
+        - Netgear_R6800
+        - Redmi_AC2100
+        - Asus_RT-AC85P
+        - SIM_AX1800T
+        - H3C_TX1801
+        - H3C_TX1806
+        - Arcadyan_WE410443-TC
+        - Youhua_WR1200JS
+        - Youhua_WR330
+        - Xiaoyu_C1
+        - Xiaoyu_C3
+        - Xiaoyu_C5
+        - ZTE_E8820S
+        default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
         required: true
@@ -61,11 +75,11 @@ on:
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20220224'
-      uploadwet:
+        default: '20220520'
+      uploadanon:
         type: boolean
-        description: 'whether to upload firmware to wetransfer'
-        default: 'true'
+        description: 'whether to upload firmware to anonfiles'
+        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
   WORK_PATH: /opt/padavan-4.4
@@ -79,8 +93,169 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@main
+    - uses: actions/checkout@v3
+    - uses: hendrikmuhs/ccache-action@v1.2
+    - uses: kanga333/variable-mapper@master
+      id: export
+      with:
+        key: "${{ github.event.inputs.target }}"
+        map: |
+          {
+            "Gee_B70": {
+              "model": "B70"
+            },
+            "Nokia-Sbell_A-040W-Q": {
+              "model": "BELL-A040WQ"
+            },
+            "Xiaomi_CR6606": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6608": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6609": {
+              "model": "CR660x"
+            },
+            "DLINK_DIR-878": {
+              "model": "DIR-878"
+            },
+            "DLINK_DIR-882": {
+              "model": "DIR-882"
+            },
+            "ZTE_E8820V2": {
+              "model": "E8820V2"
+            },
+            "Linksys_EA7500": {
+              "model": "EA7500"
+            },
+            "GHL_R-001": {
+              "model": "GHL"
+            },
+            "Hair_HAR-20S2U1": {
+              "model": "HAR-20S2U1"
+            },
+            "JCG_836PRO": {
+              "model": "JCG-836PRO"
+            },
+            "JCG_AC860M": {
+              "model": "JCG-AC860M"
+            },
+            "JCQ_Q20-PB": {
+              "model": "JCG-Q20-PB"
+            },
+            "JCQ_Q20": {
+              "model": "JCG-Q20"
+            },
+            "JCQ_Q10Pro": {
+              "model": "JCG-Q20"
+            },
+            "JCG_Y2": {
+              "model": "JCG-Y2"
+            },
+            "JDCloud_Luban": {
+              "model": "JDCLOUD-RE-CP-02"
+            },
+            "JDCloud_1": {
+              "model": "JDCLOUD-RE-SP-01B"
+            },
+            "Phicomm_K2P-NANO": {
+              "model": "K2P-NANO"
+            },
+            "Phicomm_K2P-USB": {
+              "model": "K2P-USB"
+            },
+            "Phicomm_K2P": {
+              "model": "K2P"
+            },
+            "Xiaomi_4": {
+              "model": "MI-4"
+            },
+            "Xiaomi_R3G": {
+              "model": "MI-R3G"
+            },
+            "Xiaomi_R3P-PB": {
+              "model": "MI-R3P-PB"
+            },
+            "Xiaomi_R3P-SPI": {
+              "model": "MI-R3P-SPI"
+            },
+            "Xiaomi_R3P": {
+              "model": "MI-R3P"
+            },
+            "Xiaomi_R4A": {
+              "model": "MI-R4A"
+            },
+            "Motorola_MR2600": {
+              "model": "MR2600"
+            },
+            "Raisecom_MSG1500_Z.00": {
+              "model": "MSG1500-Z"
+            },
+            "Raisecom_MSG1500_X.00": {
+              "model": "MSG1500"
+            },
+            "Lenovo_NEWIFI2": {
+              "model": "NEWIFI"
+            },
+            "Diting_NEWIFI3": {
+              "model": "NEWIFI3"
+            },
+            "QianmoBus_B1": {
+              "model": "QM-B1"
+            },
+            "Xiaomi_AC2100": {
+              "model": "R2100"
+            },
+            "Netgear_R6800": {
+              "model": "R6800"
+            },
+            "Redmi_AC2100": {
+              "model": "RM2100"
+            },
+            "Asus_RT-AC85P": {
+              "model": "RT-AC85P"
+            },
+            "SIM_AX1800T": {
+              "model": "SIM-AX1800T"
+            },
+            "H3C_TX1801": {
+              "model": "TX1801"
+            },
+            "H3C_TX1806": {
+              "model": "TX1801"
+            },
+            "Arcadyan_WE410443-TC": {
+              "model": "WE410443-TC"
+            },
+            "Youhua_WR1200JS": {
+              "model": "WR1200JS"
+            },
+            "Youhua_WR330": {
+              "model": "WR1200JS"
+            },
+            "Xiaoyu_C1": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C3": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C5": {
+              "model": "XY-C1"
+            },
+            "ZTE_E8820S": {
+              "model": "ZTE-E8820S"
+            },
+            ".*": {
+              "model": "K2P"
+            }
+          }
+        export_to: env
+        mode: first_match
+    - uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+        check-latest: true
+        cache-dependency-path: '**/go.sum'
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -91,11 +266,6 @@ jobs:
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev
         sudo timedatectl set-timezone "$TIME_ZONE"
-    - name: Set golang
-      run: |
-        cp -f bashScripts/go.sh $(pwd)
-        sudo chmod 777 ./go.sh
-        bash ./go.sh
     - name: Clone source code
       run: |
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
@@ -104,20 +274,21 @@ jobs:
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
-        cp -f formlogin/httpd.c $WORK_PATH/trunk/user/httpd
+        #cp -f formlogin/httpd.c $WORK_PATH/trunk/user/httpd
+        git apply $WORK_PATH/trunk/user/httpd/formlogin.patch
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
     - name: Apply specialized logo
       if: github.event.inputs.specializedlogo == 'true'
       run: |
         logoFile=
-        if [ "${{ github.event.inputs.target }}" = "BELL-A040WQ" ]; then
+        if [ "${{ env.model }}" = "BELL-A040WQ" ]; then
         logoFile="a040wq/bell_asus_logo.png"
         fi
-        if [ "${{ github.event.inputs.target }}" = "ZTE-E8820S" ]; then
+        if [ "${{ env.model }}" = "ZTE-E8820S" ]; then
         logoFile="e8820s/zte_asus_logo.png"
         fi
-        if [ "${{ github.event.inputs.target }}" = "MSG1500" ]; then
+        if [ "${{ env.model }}" = "MSG1500" ]; then
         logoFile="msg1500/raisecom_asus_logo.png"
         fi
         if [ -n "$logoFile" ]; then
@@ -137,9 +308,9 @@ jobs:
       run: |
         cd $WORK_PATH/trunk
         if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
-            sudo ./change_logo.sh ${{ github.event.inputs.target }} 0
+            sudo ./change_logo.sh ${{ env.model }} 0
         else
-            sudo ./change_logo.sh ${{ github.event.inputs.target }}
+            sudo ./change_logo.sh ${{ env.model }}
         fi
     - name: Parse json string of include plugins
       run: |
@@ -170,11 +341,11 @@ jobs:
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
-        if [ ! -f configs/templates/${{ github.event.inputs.target }}.config ] ; then
-        echo "configs/templates/${{ github.event.inputs.target }}.config not found"
+        if [ ! -f configs/templates/${{ env.model }}.config ] ; then
+        echo "configs/templates/${{ env.model }}.config not found"
         exit 1
         fi
-        cp -f configs/templates/${{ github.event.inputs.target }}.config .config
+        cp -f configs/templates/${{ env.model }}.config .config
         ################################################################################################
         #因不同型号配置功能不一样，所以先把配置项删除，如果你自己要添加其他的，也要写上删除这一条，切记！！！
         ################################################################################################
@@ -256,7 +427,7 @@ jobs:
     - name: Build firmware
       run: |
         cd $WORK_PATH
-        sudo make ${{ github.event.inputs.target }}
+        sudo make ${{ env.model }}
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
       id: organize
@@ -268,7 +439,7 @@ jobs:
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ github.event.inputs.target }}"_"${rainbow_Prefix}"kernal4.4.trx"
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_"${rainbow_Prefix}"kernal4.4.trx"
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -279,13 +450,12 @@ jobs:
       with:
         name: Padavan44-packages
         path: ${{ env.FIRMWARE }}
-    - name: Upload firmware to WeTransfer
-      if: env.STATUS == 'success' && ( env.UPLOAD_WETRANSFER == 'true' || github.event.inputs.uploadwet == 'true' )
+    - name: Upload firmware to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.3.0
       if: env.STATUS == 'success'

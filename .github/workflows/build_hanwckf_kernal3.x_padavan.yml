@@ -7,53 +7,54 @@ on:
         type: choice
         description: 'target to compile'
         options:
-        - PSG1208
-        - PSG1218
-        - 5K-W20
-        - OYE-001
-        - NEWIFI-MINI
-        - MI-MINI
-        - MI-3
-        - MI-3C
-        - MI-4
-        - MI-R3G
-        - MI-R4A
-        - MI-R3P
-        - HC5661A
-        - HC5761A
-        - HC5861B
-        - 360P2
-        - MI-NANO
-        - MZ-R13
-        - MZ-R13P
-        - RT-AC1200GU
-        - XY-C1
-        - WR1200JS
-        - NEWIFI3
-        - B70
-        - A3004NS
-        - K2P
-        - K2P-USB
-        - JCG-836PRO
-        - JCG-AC860M
-        - DIR-882
-        - DIR-878
-        - MR2600
-        - WDR7300
-        - RM2100
-        - CR660x
-        - R2100
-        - JCG-Y2
-        - E8820V2
+        - Phicomm_K1
+        - Phicomm_K2
+        - Oyewifi_OYE-0001
+        - Lenovo_NEWIFI-MINI
+        - Xiaomi_MINI
+        - Xiaomi_3
+        - Xiaomi_3C
+        - Xiaomi_4
+        - Xiaomi_R3G
+        - Xiaomi_R4A
+        - Xiaomi_R3P
+        - Gee_HiWifi1S
+        - Gee_HiWifi2
+        - Gee_Enjoy1200
+        - Qihoo_360P2
+        - Xiaomi_NANO
+        - Meizu_R13
+        - Meizu_R13P
+        - Asus_RT-AC1200GU
+        - Xiaoyu_C1
+        - Xiaoyu_C3
+        - Xiaoyu_C5
+        - Youhua_WR1200JS
+        - Diting_NEWIFI3
+        - Gee_B70
+        - Totolink_A3004NS
+        - Phicomm_K2P
+        - Phicomm_K2P-USB
+        - JCG_836PRO
+        - JCG_AC860M
+        - DLINK_DIR-882
+        - DLINK_DIR-878
+        - Motorola_MR2600
+        - TP-LINK_WDR7300
+        - Redmi_AC2100
+        - Xiaomi_CR6606
+        - Xiaomi_CR6608
+        - Xiaomi_CR6609
+        - Xiaomi_AC2100
+        - JCG_Y2
+        - ZTE_E8820V2
         - ZTE_E8820S
-        - MSG1500
-        - R6220
-        - NETGEAR-CHJ
-        - NETGEAR-BZV
-      uploadwet:
+        - Raisecom_MSG1500_X.00
+        - Netgear_R6220
+      uploadanon:
         type: boolean
-        description: 'whether to upload firmware to wetransfer'
-        default: 'true'
+        description: 'whether to upload firmware to anonfiles'
+        default: 'false'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/rt-n56u.git
   TOOLCHAIN_URL: https://github.com/hanwckf/padavan-toolchain/releases/download/v1.1/mipsel-linux-uclibc.tar.xz
@@ -67,8 +68,151 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
+    - uses: actions/checkout@v3
+    - uses: kanga333/variable-mapper@master
+      id: export
+      with:
+        key: "${{ github.event.inputs.target }}"
+        map: |
+          {
+            "Phicomm_K1": {
+              "model": "PSG1208"
+            },
+            "Phicomm_K2": {
+              "model": "PSG1218"
+            },
+            "Oyewifi_OYE-0001": {
+              "model": "OYE-001"
+            },
+            "Lenovo_NEWIFI-MINI": {
+              "model": "NEWIFI-MINI"
+            },
+            "Xiaomi_MINI": {
+              "model": "MI-MINI"
+            },
+            "Xiaomi_3": {
+              "model": "MI-3"
+            },
+            "Xiaomi_3C": {
+              "model": "MI-3C"
+            },
+            "Xiaomi_4": {
+              "model": "MI-4"
+            },
+            "Xiaomi_R3G": {
+              "model": "MI-R3G"
+            },
+            "Xiaomi_R4A": {
+              "model": "MI-R4A"
+            },
+            "Xiaomi_R3P": {
+              "model": "MI-R3P"
+            },
+            "Gee_HiWifi1S": {
+              "model": "HC5661A"
+            },
+            "Gee_HiWifi2": {
+              "model": "HC5761A"
+            },
+            "Gee_Enjoy1200": {
+              "model": "HC5861B"
+            },
+            "Qihoo_360P2": {
+              "model": "360P2"
+            },
+            "Xiaomi_NANO": {
+              "model": "MI-NANO"
+            },
+            "Meizu_R13": {
+              "model": "MZ-R13"
+            },
+            "Meizu_R13P": {
+              "model": "MZ-R13P"
+            },
+            "Asus_RT-AC1200GU": {
+              "model": "RT-AC1200GU"
+            },
+            "Xiaoyu_C1": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C3": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C5": {
+              "model": "XY-C1"
+            },
+            "Youhua_WR1200JS": {
+              "model": "WR1200JS"
+            },
+            "Diting_NEWIFI3": {
+              "model": "NEWIFI3"
+            },
+            "Gee_B70": {
+              "model": "B70"
+            },
+            "Totolink_A3004NS": {
+              "model": "A3004NS"
+            },
+            "Phicomm_K2P": {
+              "model": "K2P"
+            },
+            "Phicomm_K2P-USB": {
+              "model": "K2P-USB"
+            },
+            "JCG_836PRO": {
+              "model": "JCG-836PRO"
+            },
+            "JCG_AC860M": {
+              "model": "JCG-AC860M"
+            },
+            "DLINK_DIR-882": {
+              "model": "DIR-882"
+            },
+            "DLINK_DIR-878": {
+              "model": "DIR-878"
+            },
+            "Motorola_MR2600": {
+              "model": "MR2600"
+            },
+            "TP-LINK_WDR7300": {
+              "model": "WDR7300"
+            },
+            "Redmi_AC2100": {
+              "model": "RM2100"
+            },
+            "Xiaomi_CR6606": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6608": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6609": {
+              "model": "CR660x"
+            },
+            "Xiaomi_AC2100": {
+              "model": "R2100"
+            },
+            "JCG_Y2": {
+              "model": "JCG-Y2"
+            },
+            "ZTE_E8820V2": {
+              "model": "E8820V2"
+            },
+            "ZTE_E8820S": {
+              "model": "ZTE_E8820S"
+            },
+            "Raisecom_MSG1500_X.00": {
+              "model": "MSG1500"
+            },
+            "Netgear_R6220": {
+              "model": "R6220"
+            },
+            ".*": {
+              "model": "K2P"
+            }
+          }
+        export_to: env
+        mode: first_match
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -94,24 +238,24 @@ jobs:
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
-        if [ ! -f configs/templates/${{ github.event.inputs.target }}.config ] ; then
-        echo "configs/templates/${{ github.event.inputs.target }}.config not found"
+        if [ ! -f configs/templates/${{ env.model }}.config ] ; then
+        echo "configs/templates/${{ env.model }}.config not found"
         exit 1
         fi
-        cp -f configs/templates/${{ github.event.inputs.target }}.config .config
+        cp -f configs/templates/${{ env.model }}.config .config
         sed -i "s/FIRMWARE_BUILDS_REV=.*/FIRMWARE_BUILDS_REV=${FIRMWARE_VERSION}/g" ./versions.inc
     - name: Build firmware
       run: |
         cd $WORK_PATH/trunk
         ./clear_tree
-        fakeroot ./build_firmware_modify ${{ github.event.inputs.target }}
+        fakeroot ./build_firmware_modify ${{ env.model }}
     - name: Organize firmware files
       id: organize
       run: |
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ github.event.inputs.target }}"_kernal3.x.trx"
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_kernal3.x.trx"
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -122,10 +266,15 @@ jobs:
       with:
         name: Padavan-packages
         path: ${{ env.FIRMWARE }}
-    - name: Upload firmware to WeTransfer
-      if: env.STATUS == 'success' && github.event.inputs.uploadwet == 'true'
+    - name: Upload firmware to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
+    - name: Remove obsolete firmwares on artifacts
+      uses: c-hive/gha-remove-artifacts@v1.3.0
+      if: env.STATUS == 'success'
+      with:
+        age: '1 day'
+        skip-recent: 5

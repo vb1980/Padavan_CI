@@ -2,31 +2,39 @@ name: Build v2ray
 
 on: 
   workflow_dispatch:
-  
+    inputs:
+      uploadanon:
+        type: boolean
+        description: 'whether to upload to anonfiles'
+        default: 'false'
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       v2raydir: ./v2ray
     if: github.event.repository.owner.id == github.event.sender.id
+    
     steps:
-    - name: Checkout
-      uses: actions/checkout@main
-    - name: Setup golang version
-      uses: actions/setup-go@v2
+    - uses: actions/checkout@v3
+    
+    - uses: actions/setup-go@v4
       with:
-        go-version: '1.16.6'
+        go-version: '1.20'
+        check-latest: true
+        cache-dependency-path: '**/go.sum'
+
     - name: Initialization environment
       run: |
         sudo apt-get update
         sudo apt install bzip2 make curl upx -y
+
     - name: Build v2ray
       run: |
         cp -f ${{env.v2raydir}}/v2ray_Makefile ./Makefile
         sudo chmod +x ./Makefile
         make
+
     - name: Upx v2ray
-      id: upx
       run: |
         cd ./bin
         upx -9 v2ray
@@ -34,9 +42,24 @@ jobs:
         rm -vrf !("v2ray")
         echo "v2ray=$(pwd)" >> $GITHUB_ENV
         echo "STATUS=success" >> $GITHUB_ENV
+
     - name : Upload packages
       uses: actions/upload-artifact@main
-      if: steps.upx.outputs.status == 'success'
+      if: env.STATUS == 'success'
       with:
         name: v2ray-packages
         path: ${{ env.v2ray }}
+        
+    - name: Upload v2ray bin to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer anon --no-progress ${v2ray} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
+        
+    - name: Remove obsolete v2ray(s) on artifacts
+      uses: c-hive/gha-remove-artifacts@v1.3.0
+      if: env.STATUS == 'success'
+      with:
+        age: '1 day'
+        skip-recent: 5

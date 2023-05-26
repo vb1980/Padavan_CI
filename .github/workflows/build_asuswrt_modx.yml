@@ -7,22 +7,24 @@ on:
         type: choice
         description: 'target to build'
         options:
-        - RT-MIR3G
-        - RT-MIR3P
-        - RT-MIR4A
-        - RT-RM2100
-        - RT-R2100
-        - RT-NEWIFI2
-        - RT-XYC3
-        - RT-NEWIFI3
-        - RT-JDC1
-        - RT-HIWIFI4
-        - RT-E8820S
-        - RT-A040WQ
-        - RT-MSG1500
-      uploadwet:
+        - Xiaomi_R3G
+        - Xiaomi_R3P
+        - Xiaomi_R4A
+        - Redmi_AC2100
+        - Xiaomi_AC2100
+        - Lenovo_NEWIFI2
+        - Xiaoyu_C1
+        - Xiaoyu_C3
+        - Xiaoyu_C5
+        - Diting_NEWIFI3
+        - JDCloud_1
+        - Gee_HC5962
+        - ZTE_E8820S
+        - Nokia-Sbell_A-040W-Q
+        - Raisecom_MSG1500_X.00
+      uploadanon:
         type: boolean
-        description: 'whether to upload firmware to wettransfer'
+        description: 'whether to upload firmware to anonfiles'
         default: 'false'
 env:
   REPOSITORY_URL: https://github.com/stkuroneko/asuswrt-mt7621at.git
@@ -36,7 +38,64 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@main
+      uses: actions/checkout@v3
+    - uses: kanga333/variable-mapper@master
+      id: export
+      with:
+        key: "${{ github.event.inputs.target }}"
+        map: |
+          {
+            "Xiaomi_R3G": {
+              "model": "RT-MIR3G"
+            },
+            "Xiaomi_R3P": {
+              "model": "RT-MIR3P"
+            },
+            "Xiaomi_R4A": {
+              "model": "RT-MIR4A"
+            },
+            "Redmi_AC2100": {
+              "model": "RT-RM2100"
+            },
+            "Xiaomi_AC2100": {
+              "model": "RT-R2100"
+            },
+            "Lenovo_NEWIFI2": {
+              "model": "RT-NEWIFI2"
+            },
+            "Xiaoyu_C1": {
+              "model": "RT-XYC3"
+            },
+            "Xiaoyu_C3": {
+              "model": "RT-XYC3"
+            },
+            "Xiaoyu_C5": {
+              "model": "RT-XYC3"
+            },
+            "Diting_NEWIFI3": {
+              "model": "RT-NEWIFI3"
+            },
+            "JDCloud_1": {
+              "model": "RT-JDC1"
+            },
+            "Gee_HC5962": {
+              "model": "RT-HIWIFI4"
+            },
+            "ZTE_E8820S": {
+              "model": "RT-E8820S"
+            },
+            "Nokia-Sbell_A-040W-Q": {
+              "model": "RT-A040WQ"
+            },
+            "Raisecom_MSG1500_X.00": {
+              "model": "RT-MSG1500"
+            },
+            ".*": {
+              "model": "RT-MSG1500"
+            }
+          }
+        export_to: env
+        mode: first_match
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -60,19 +119,17 @@ jobs:
         sudo cp -f bashScripts/asuswrt_build.sh $WORK_PATH/build.sh
         cd $WORK_PATH
         sudo chmod 777 ./build.sh
-        bash ./build.sh ${{ github.event.inputs.target }}
-        #sudo make ${{ github.event.inputs.target }}
+        bash ./build.sh ${{ env.model }}
         echo "dateprefix=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
-      id: organize
       run: |
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/release/src-ra-5010/image
         for firmwarefile in $(ls *.trx)
-        do sudo mv -f $firmwarefile $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.trx
+        do sudo mv -f $firmwarefile $FIRMWARE_PATH/${{ env.model }}"_"${dateprefix}.trx
         done
         for md5file in $(ls *.md5)
-        do sudo mv -f $md5file $FIRMWARE_PATH/${{ github.event.inputs.target }}"_"${dateprefix}.md5
+        do sudo mv -f $md5file $FIRMWARE_PATH/${{ env.model }}"_"${dateprefix}.md5
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -83,13 +140,12 @@ jobs:
       with:
         name: Asuswrt-packages
         path: ${{ env.FIRMWARE }}
-    - name: Upload firmware to WeTransfer
-      if: env.STATUS == 'success' && github.event.inputs.uploadwet == 'true'
+    - name: Upload firmware to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "WETRANSFER_URL=$(cat wetransfer.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")" >> $GITHUB_ENV
+        ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
     - name: Remove obsolete firmwares on artifacts
       uses: c-hive/gha-remove-artifacts@v1.3.0
       if: env.STATUS == 'success'
