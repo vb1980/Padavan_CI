@@ -62,11 +62,11 @@ on:
         default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       rainbowui:
         type: boolean
-        description: 'whether to apply rainbow ui'
+        description: 'apply rainbow ui'
         default: 'false'
       specializedlogo:
         type: boolean
-        description: 'whether to apply specialized logo for e8820s or a-040w-q'
+        description: 'apply specialized logo for e8820s or a-040w-q'
         default: 'false'
       changebrandlogo:
         type: boolean
@@ -78,7 +78,7 @@ on:
         default: '20220520'
       uploadanon:
         type: boolean
-        description: 'whether to upload firmware to anonfiles'
+        description: 'upload firmware to anonfiles'
         default: 'false'
 env:
   REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git

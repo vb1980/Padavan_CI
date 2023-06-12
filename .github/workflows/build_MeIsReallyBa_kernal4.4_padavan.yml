@@ -49,7 +49,7 @@ on:
         default: '20220218'
       uploadanon:
         type: boolean
-        description: 'whether to upload firmware to anonfiles'
+        description: 'upload firmware to anonfiles'
         default: 'false'
 env:
   REPOSITORY_URL: https://github.com/MeIsReallyBa/padavan-4.4.git

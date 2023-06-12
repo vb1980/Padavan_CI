@@ -26,7 +26,7 @@ on:
         - Xiaoyu_C5
       uploadanon:
         type: boolean
-        description: 'whether to upload firmware to anonfiles'
+        description: 'upload firmware to anonfiles'
         default: 'false'
 env:
   REPOSITORY_URL: https://github.com/hanwckf/padavan-4.4.git
@@ -37,7 +37,7 @@ env:
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
