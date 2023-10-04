@@ -271,6 +271,12 @@ jobs:
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH
         sed -i '/cp -f/d' Makefile
+    - name: Extract toolchain
+      run: |
+        cp -f toolchain/mipsel-linux-uclibc-gcc10.tar.xz $WORK_PATH
+        cd $WORK_PATH
+        mkdir -p toolchain-mipsel/toolchain-4.4.x
+        tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
