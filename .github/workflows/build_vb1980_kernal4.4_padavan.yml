@@ -55,6 +55,7 @@ on:
         - Xiaoyu_C3
         - Xiaoyu_C5
         - ZTE_E8820S
+        - FCJ_G-AX1800
         default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
@@ -244,6 +245,9 @@ jobs:
             },
             "ZTE_E8820S": {
               "model": "ZTE-E8820S"
+            },
+            "FCJ_G-AX1800": {
+              "model": "G-AX1800"
             },
             ".*": {
               "model": "K2P"
