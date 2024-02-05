@@ -1,20 +1,65 @@
-name: Build vb1980's kernal4.4 Padavan for multi targets
+name: Build tsl0922's kernal4.4 Padavan
 
 on:
   workflow_dispatch:
     inputs:
-      targets:
-        description: 'targets to compile'
-        required: true
-        default: "['SIM-AX1800T','HAR-20S2U1','CR660x','JCG-Q20']"
+      target:
+        type: choice
+        description: 'target to compile'
+        options:
+        - Gee_B70
+        - Nokia-Sbell_A-040W-Q
+        - Xiaomi_CR6606
+        - Xiaomi_CR6608
+        - Xiaomi_CR6609
+        - DLINK_DIR-878
+        - DLINK_DIR-882
+        - ZTE_E8820V2
+        - Linksys_EA7500
+        - GHL_R-001
+        - Hair_HAR-20S2U1
+        - JCG_836PRO
+        - JCG_AC860M
+        - JCQ_Q20-PB
+        - JCQ_Q20
+        - JCQ_Q10Pro
+        - JCG_Y2
+        - JDCloud_Luban
+        - JDCloud_1
+        - Phicomm_K2P-NANO
+        - Phicomm_K2P-USB
+        - Phicomm_K2P
+        - Xiaomi_4
+        - Xiaomi_R3G
+        - Xiaomi_R3P-PB
+        - Xiaomi_R3P-SPI
+        - Xiaomi_R3P
+        - Xiaomi_R4A
+        - Motorola_MR2600
+        - Raisecom_MSG1500_Z.00
+        - Raisecom_MSG1500_X.00
+        - Lenovo_NEWIFI2
+        - Diting_NEWIFI3
+        - QianmoBus_B1
+        - Xiaomi_AC2100
+        - Netgear_R6800
+        - Redmi_AC2100
+        - Asus_RT-AC85P
+        - SIM_AX1800T
+        - H3C_TX1801
+        - H3C_TX1806
+        - Arcadyan_WE410443-TC
+        - Youhua_WR1200JS
+        - Youhua_WR330
+        - Xiaoyu_C1
+        - Xiaoyu_C3
+        - Xiaoyu_C5
+        - ZTE_E8820S
+        default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
         required: true
-        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"n","v2ray":"n","xray":"n","trojan":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
-      lanip:
-        description: 'custom lan ip instead of default'
-        required: true
-        default: '192.168.2.1'
+        default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       rainbowui:
         type: boolean
         description: 'apply rainbow ui'
@@ -30,9 +75,13 @@ on:
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20220520'
+        default: '20231005'
+      uploadanon:
+        type: boolean
+        description: 'upload firmware to anonfiles'
+        default: 'false'
 env:
-  REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
+  REPOSITORY_URL: https://github.com/Bonnie2980/tsl0922_padavan.git
   WORK_PATH: /opt/padavan-4.4
   TIME_ZONE: Asia/Shanghai
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
@@ -40,27 +89,173 @@ env:
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
-    
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(github.event.inputs.targets) }}
-        
+
     steps:
     - uses: actions/checkout@v4
     - uses: hendrikmuhs/ccache-action@v1.2.12
+    - uses: Bonnie2980/variable-mapper@master
+      id: export
       with:
-        key: ${{ matrix.target }}
-        append-timestamp: false
-        
+        key: "${{ github.event.inputs.target }}"
+        map: |
+          {
+            "Gee_B70": {
+              "model": "B70"
+            },
+            "Nokia-Sbell_A-040W-Q": {
+              "model": "BELL-A040WQ"
+            },
+            "Xiaomi_CR6606": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6608": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6609": {
+              "model": "CR660x"
+            },
+            "DLINK_DIR-878": {
+              "model": "DIR-878"
+            },
+            "DLINK_DIR-882": {
+              "model": "DIR-882"
+            },
+            "ZTE_E8820V2": {
+              "model": "E8820V2"
+            },
+            "Linksys_EA7500": {
+              "model": "EA7500"
+            },
+            "GHL_R-001": {
+              "model": "GHL"
+            },
+            "Hair_HAR-20S2U1": {
+              "model": "HAR-20S2U1"
+            },
+            "JCG_836PRO": {
+              "model": "JCG-836PRO"
+            },
+            "JCG_AC860M": {
+              "model": "JCG-AC860M"
+            },
+            "JCQ_Q20-PB": {
+              "model": "JCG-Q20-PB"
+            },
+            "JCQ_Q20": {
+              "model": "JCG-Q20"
+            },
+            "JCQ_Q10Pro": {
+              "model": "JCG-Q20"
+            },
+            "JCG_Y2": {
+              "model": "JCG-Y2"
+            },
+            "JDCloud_Luban": {
+              "model": "JDCLOUD-RE-CP-02"
+            },
+            "JDCloud_1": {
+              "model": "JDCLOUD-RE-SP-01B"
+            },
+            "Phicomm_K2P-NANO": {
+              "model": "K2P-NANO"
+            },
+            "Phicomm_K2P-USB": {
+              "model": "K2P-USB"
+            },
+            "Phicomm_K2P": {
+              "model": "K2P"
+            },
+            "Xiaomi_4": {
+              "model": "MI-4"
+            },
+            "Xiaomi_R3G": {
+              "model": "MI-R3G"
+            },
+            "Xiaomi_R3P-PB": {
+              "model": "MI-R3P-PB"
+            },
+            "Xiaomi_R3P-SPI": {
+              "model": "MI-R3P-SPI"
+            },
+            "Xiaomi_R3P": {
+              "model": "MI-R3P"
+            },
+            "Xiaomi_R4A": {
+              "model": "MI-R4A"
+            },
+            "Motorola_MR2600": {
+              "model": "MR2600"
+            },
+            "Raisecom_MSG1500_Z.00": {
+              "model": "MSG1500-Z"
+            },
+            "Raisecom_MSG1500_X.00": {
+              "model": "MSG1500"
+            },
+            "Lenovo_NEWIFI2": {
+              "model": "NEWIFI"
+            },
+            "Diting_NEWIFI3": {
+              "model": "NEWIFI3"
+            },
+            "QianmoBus_B1": {
+              "model": "QM-B1"
+            },
+            "Xiaomi_AC2100": {
+              "model": "R2100"
+            },
+            "Netgear_R6800": {
+              "model": "R6800"
+            },
+            "Redmi_AC2100": {
+              "model": "RM2100"
+            },
+            "Asus_RT-AC85P": {
+              "model": "RT-AC85P"
+            },
+            "SIM_AX1800T": {
+              "model": "SIM-AX1800T"
+            },
+            "H3C_TX1801": {
+              "model": "TX1801"
+            },
+            "H3C_TX1806": {
+              "model": "TX1801"
+            },
+            "Arcadyan_WE410443-TC": {
+              "model": "WE410443-TC"
+            },
+            "Youhua_WR1200JS": {
+              "model": "WR1200JS"
+            },
+            "Youhua_WR330": {
+              "model": "WR1200JS"
+            },
+            "Xiaoyu_C1": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C3": {
+              "model": "XY-C1"
+            },
+            "Xiaoyu_C5": {
+              "model": "XY-C1"
+            },
+            "ZTE_E8820S": {
+              "model": "ZTE-E8820S"
+            },
+            ".*": {
+              "model": "K2P"
+            }
+          }
+        export_to: env
+        mode: first_match
     - uses: actions/setup-go@v5
       with:
         go-version: '1.21.1'
         check-latest: true
         cache-dependency-path: '**/go.sum'
-        
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -69,25 +264,13 @@ jobs:
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
-        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev ccache
+        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
         git clone --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH
         sed -i '/cp -f/d' Makefile
-    - name: Extract toolchain
-      run: |
-        cp -f toolchain/mipsel-linux-uclibc-gcc10.tar.xz $WORK_PATH
-        cd $WORK_PATH
-        mkdir -p toolchain-mipsel/toolchain-4.4.x
-        tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
-    - name: Custom Lan IP
-      run: |
-        cp -f bashScripts/setlanip.sh $WORK_PATH/trunk
-        cd $WORK_PATH/trunk
-        sudo chmod +x setlanip.sh
-        bash ./setlanip.sh ./user/shared/defaults.h ${{ github.event.inputs.lanip }}
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
@@ -100,13 +283,13 @@ jobs:
       if: github.event.inputs.specializedlogo == 'true'
       run: |
         logoFile=
-        if [ "${{ matrix.target }}" = "BELL-A040WQ" ]; then
+        if [ "${{ env.model }}" = "BELL-A040WQ" ]; then
         logoFile="a040wq/bell_asus_logo.png"
         fi
-        if [ "${{ matrix.target }}" = "ZTE-E8820S" ]; then
+        if [ "${{ env.model }}" = "ZTE-E8820S" ]; then
         logoFile="e8820s/zte_asus_logo.png"
         fi
-        if [ "${{ matrix.target }}" = "MSG1500" ]; then
+        if [ "${{ env.model }}" = "MSG1500" ]; then
         logoFile="msg1500/raisecom_asus_logo.png"
         fi
         if [ -n "$logoFile" ]; then
@@ -126,9 +309,9 @@ jobs:
       run: |
         cd $WORK_PATH/trunk
         if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
-            sudo ./change_logo.sh ${{ matrix.target }} 0
+            sudo ./change_logo.sh ${{ env.model }} 0
         else
-            sudo ./change_logo.sh ${{ matrix.target }}
+            sudo ./change_logo.sh ${{ env.model }}
         fi
     - name: Parse json string of include plugins
       run: |
@@ -159,11 +342,11 @@ jobs:
     - name: Custom config
       run: |
         cd $WORK_PATH/trunk
-        if [ ! -f configs/templates/${{ matrix.target }}.config ] ; then
-        echo "configs/templates/${{ matrix.target }}.config not found"
+        if [ ! -f configs/templates/${{ env.model }}.config ] ; then
+        echo "configs/templates/${{ env.model }}.config not found"
         exit 1
         fi
-        cp -f configs/templates/${{ matrix.target }}.config .config
+        cp -f configs/templates/${{ env.model }}.config .config
         ################################################################################################
         #因不同型号配置功能不一样，所以先把配置项删除，如果你自己要添加其他的，也要写上删除这一条，切记！！！
         ################################################################################################
@@ -245,7 +428,7 @@ jobs:
     - name: Build firmware
       run: |
         cd $WORK_PATH
-        sudo make ${{ matrix.target }}
+        sudo make ${{ env.model }} TOOLCHAIN=mipsel-linux-musl
         echo "FIRMWARE_DATEPREFIX=$(date +"%Y%m%d")" >> $GITHUB_ENV
     - name: Organize firmware files
       id: organize
@@ -257,7 +440,7 @@ jobs:
         mkdir -p $FIRMWARE_PATH/
         cd $WORK_PATH/trunk/images
         for firmwarefile in $(ls *.trx)
-        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ matrix.target }}"_"${rainbow_Prefix}"kernal4.4.trx"
+        do sudo mv $firmwarefile $FIRMWARE_PATH/${FIRMWARE_DATEPREFIX}"_"${FIRMWARE_AUTHOR}"_"${{ env.model }}"_"${rainbow_Prefix}"kernal4.4.trx"
         done
         cd $FIRMWARE_PATH
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -267,7 +450,13 @@ jobs:
       if: env.STATUS == 'success'
       with:
         name: Padavan44-packages
-        path: ${{ env.FIRMWARE_PATH }}/*.trx
+        path: ${{ env.FIRMWARE }}
+    - name: Upload firmware to anonfiles
+      if: env.STATUS == 'success' && github.event.inputs.uploadanon == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
+        echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
     - name: Remove obsolete firmwares on artifacts
       uses: Bonnie2980/gha-remove-artifacts@master
       if: env.STATUS == 'success'

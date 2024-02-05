@@ -56,11 +56,16 @@ on:
         - Xiaoyu_C5
         - ZTE_E8820S
         - FCJ_G-AX1800
+        - Skspruce_WIA3300-10
         default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
         required: true
         default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
+      lanip:
+        description: 'custom lan ip instead of default'
+        required: true
+        default: '192.168.2.1'
       rainbowui:
         type: boolean
         description: 'apply rainbow ui'
@@ -94,9 +99,9 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: hendrikmuhs/ccache-action@v1.2
-    - uses: kanga333/variable-mapper@master
+    - uses: actions/checkout@v4
+    - uses: hendrikmuhs/ccache-action@v1.2.12
+    - uses: Bonnie2980/variable-mapper@master
       id: export
       with:
         key: "${{ github.event.inputs.target }}"
@@ -249,13 +254,16 @@ jobs:
             "FCJ_G-AX1800": {
               "model": "G-AX1800"
             },
+            "Skspruce_WIA3300-10": {
+              "model": "WIA3300-10"
+            },
             ".*": {
               "model": "K2P"
             }
           }
         export_to: env
         mode: first_match
-    - uses: actions/setup-go@v4
+    - uses: actions/setup-go@v5
       with:
         go-version: '1.21.1'
         check-latest: true
@@ -281,6 +289,12 @@ jobs:
         cd $WORK_PATH
         mkdir -p toolchain-mipsel/toolchain-4.4.x
         tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
+    - name: Custom Lan IP
+      run: |
+        cp -f bashScripts/setlanip.sh $WORK_PATH/trunk
+        cd $WORK_PATH/trunk
+        sudo chmod +x setlanip.sh
+        bash ./setlanip.sh ./user/shared/defaults.h ${{ github.event.inputs.lanip }}
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
@@ -468,7 +482,7 @@ jobs:
         ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
         echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
     - name: Remove obsolete firmwares on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.3.0
+      uses: Bonnie2980/gha-remove-artifacts@master
       if: env.STATUS == 'success'
       with:
         age: '1 day'

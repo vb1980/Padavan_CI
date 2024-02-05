@@ -13,11 +13,10 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: actions/checkout@v3
-
-    - uses: actions/setup-go@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
       with:
-        go-version: '1.20'
+        go-version: '1.21'
         check-latest: true
         cache-dependency-path: '**/go.sum'
 
@@ -54,7 +53,7 @@ jobs:
         echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
         
     - name: Remove obsolete xray(s) on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.3.0
+      uses: Bonnie2980/gha-remove-artifacts@master
       if: env.STATUS == 'success'
       with:
         age: '1 day'

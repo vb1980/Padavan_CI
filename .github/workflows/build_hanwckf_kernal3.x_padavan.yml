@@ -68,8 +68,8 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: kanga333/variable-mapper@master
+    - uses: actions/checkout@v4
+    - uses: Bonnie2980/variable-mapper@master
       id: export
       with:
         key: "${{ github.event.inputs.target }}"
@@ -273,7 +273,7 @@ jobs:
         ./transfer anon --no-progress ${FIRMWARE} 2>&1 | tee anonfile.log
         echo "::warning file=anonfile.com::$(cat anonfile.log | grep -o -E "https?://[a-zA-Z0-9\.\/_&=@$%?~#-]*")"
     - name: Remove obsolete firmwares on artifacts
-      uses: c-hive/gha-remove-artifacts@v1.3.0
+      uses: Bonnie2980/gha-remove-artifacts@master
       if: env.STATUS == 'success'
       with:
         age: '1 day'
