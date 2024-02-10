@@ -62,6 +62,10 @@ on:
         description: 'json format string of include configs'
         required: true
         default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"y","v2ray":"n","xray":"y","trojan":"y","ssobfs":"y","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
+      usexraymin:
+        type: boolean
+        description: 'whether to use streamlined xray'
+        default: false
       lanip:
         description: 'custom lan ip instead of default'
         required: true
@@ -265,7 +269,7 @@ jobs:
         mode: first_match
     - uses: actions/setup-go@v5
       with:
-        go-version: '1.21.1'
+        go-version: '1.21.4'
         check-latest: true
         cache-dependency-path: '**/go.sum'
     - name: Initialization environment
@@ -294,7 +298,11 @@ jobs:
         cp -f bashScripts/setlanip.sh $WORK_PATH/trunk
         cd $WORK_PATH/trunk
         sudo chmod +x setlanip.sh
-        bash ./setlanip.sh ./user/shared/defaults.h ${{ github.event.inputs.lanip }}
+        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
+          bash ./setlanip.sh ./user/shared/defaults.h ./user/www/n56u_rainbow/Restarting.asp ${{ github.event.inputs.lanip }}
+        else
+          bash ./setlanip.sh ./user/shared/defaults.h ./user/www/n56u_ribbon_fixed/Restarting.asp ${{ github.event.inputs.lanip }}
+        fi
     - name: Apply rainbow themes
       if: github.event.inputs.rainbowui == 'true'
       run: |
@@ -414,6 +422,9 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=${{env.trojan}}" >> .config #集成trojan执行文件(1.1M左右)
         echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=${{env.ssobfs}}" >> .config # simple-obfs混淆插件
         echo "CONFIG_FIRMWARE_INCLUDE_SSSERVER=n" >> .config #SS server
+        if [[ "${{env.xray}}" == "y" && "${{ github.event.inputs.usexraymin }}" == "true" ]]; then
+        sed -i 's/+= xray/+= xraymin/g' $WORK_PATH/trunk/user/Makefile
+        fi
         #
         echo "CONFIG_FIRMWARE_INCLUDE_SRELAY=n" >> .config #可以不集成
         echo "CONFIG_FIRMWARE_INCLUDE_TUNSAFE=n" >> .config #tunsafe
