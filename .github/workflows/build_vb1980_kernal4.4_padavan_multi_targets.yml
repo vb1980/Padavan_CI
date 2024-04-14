@@ -13,31 +13,21 @@ on:
         default: '{"vpnsvr":"n","vpncli":"n","vpncmd":"n","ss":"n","v2ray":"n","xray":"n","trojan":"n","ssobfs":"n","dnsforwarder":"n","adbyby":"n","adguardhome":"n","smartdns":"n","aliddns":"n","zerotier":"n","ddnsto":"n","wireguard":"n","frpc":"y","aldrive":"n","sqm":"y","mentohust":"n","scutclient":"n","njitclient":"n","minieap":"n","dogcom":"n"}'
       usexraymin:
         type: boolean
-        description: 'whether to use streamlined xray'
+        description: 'use streamlined xray'
         default: false
-      lanip:
-        description: 'custom lan ip instead of default'
+      customization:
+        description: 'json format string of customized configs'
         required: true
-        default: '192.168.2.1'
-      rainbowui:
-        type: boolean
-        description: 'apply rainbow ui'
-        default: 'false'
-      specializedlogo:
-        type: boolean
-        description: 'apply specialized logo for e8820s or a-040w-q'
-        default: 'false'
-      changebrandlogo:
-        type: boolean
-        description: 'change brand logo image for specialized router'
-        default: 'false'
+        default: '{"rainbowui":"y","specializedlogo":"n","changebrandlogo":"n","lanip":"192.168.2.1","signaccount":"admin","signpassword":"admin","wifi2gssid":"","wifi5gssid":"","wifi2gpsk":"","wifi5gpsk":""}'
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20220520'
+        default: '20240410'
 env:
   REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
   WORK_PATH: /opt/padavan-4.4
+  DEFAULT_FILE: ./user/shared/defaults.h
+  DICT_FILE: ./user/www/dict/CN.dict
   TIME_ZONE: Asia/Shanghai
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
   FIRMWARE_AUTHOR: vb1980
@@ -61,7 +51,7 @@ jobs:
         
     - uses: actions/setup-go@v5
       with:
-        go-version: '1.21.4'
+        go-version: '1.22.0'
         check-latest: true
         cache-dependency-path: '**/go.sum'
         
@@ -73,7 +63,8 @@ jobs:
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
-        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev ccache
+        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev ccache \
+        libssl-dev liblzo2-dev libpam0g-dev
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
@@ -86,26 +77,43 @@ jobs:
         cd $WORK_PATH
         mkdir -p toolchain-mipsel/toolchain-4.4.x
         tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
-    - name: Custom Lan IP
+    - name: Parse json string of customization configs
+      run: |
+        echo "rainbowui=${{fromJson(github.event.inputs.customization).rainbowui}}" >> $GITHUB_ENV
+        echo "specializedlogo=${{fromJson(github.event.inputs.customization).specializedlogo}}" >> $GITHUB_ENV
+        echo "changebrandlogo=${{fromJson(github.event.inputs.customization).changebrandlogo}}" >> $GITHUB_ENV
+        echo "lanip=${{fromJson(github.event.inputs.customization).lanip}}" >> $GITHUB_ENV
+        echo "signaccount=${{fromJson(github.event.inputs.customization).signaccount}}" >> $GITHUB_ENV
+        echo "signpassword=${{fromJson(github.event.inputs.customization).signpassword}}" >> $GITHUB_ENV
+        echo "wifi2gssid=${{fromJson(github.event.inputs.customization).wifi2gssid}}" >> $GITHUB_ENV
+        echo "wifi5gssid=${{fromJson(github.event.inputs.customization).wifi5gssid}}" >> $GITHUB_ENV
+        echo "wifi2gpsk=${{fromJson(github.event.inputs.customization).wifi2gpsk}}" >> $GITHUB_ENV
+        echo "wifi5gpsk=${{fromJson(github.event.inputs.customization).wifi5gpsk}}" >> $GITHUB_ENV
+    - name: Customization
       run: |
         cp -f bashScripts/setlanip.sh $WORK_PATH/trunk
+        cp -f bashScripts/setaccount.sh $WORK_PATH/trunk
+        cp -f bashScripts/setwifi.sh $WORK_PATH/trunk
         cd $WORK_PATH/trunk
         sudo chmod +x setlanip.sh
-        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
-          bash ./setlanip.sh ./user/shared/defaults.h ./user/www/n56u_rainbow/Restarting.asp ${{ github.event.inputs.lanip }}
+        sudo chmod +x setaccount.sh
+        sudo chmod +x setwifi.sh
+        if [ "${{ env.rainbowui }}" = "true" ]; then
+          bash ./setlanip.sh ${{ env.DEFAULT_FILE }} ./user/www/n56u_rainbow/Restarting.asp ${{ env.DICT_FILE }} ${{ env.lanip }}
         else
-          bash ./setlanip.sh ./user/shared/defaults.h ./user/www/n56u_ribbon_fixed/Restarting.asp ${{ github.event.inputs.lanip }}
+          bash ./setlanip.sh ${{ env.DEFAULT_FILE }} ./user/www/n56u_ribbon_fixed/Restarting.asp ${{ env.DICT_FILE }} ${{ env.lanip }}
         fi
+        bash ./setaccount.sh ${{ env.signaccount }} ${{ env.signpassword }} ${{ env.DEFAULT_FILE }}
+        bash ./setwifi.sh ${{ env.wifi2gssid }} ${{ env.wifi5gssid }} ${{ env.wifi2gpsk }} ${{ env.wifi5gpsk }} ${{ env.DEFAULT_FILE }}
     - name: Apply rainbow themes
-      if: github.event.inputs.rainbowui == 'true'
+      if: env.rainbowui == 'y'
       run: |
-        #cp -f formlogin/httpd.c $WORK_PATH/trunk/user/httpd
         cd $WORK_PATH/trunk/user/httpd
         git apply formlogin.patch
         cd $WORK_PATH/trunk/user/www
         sed -i "s/WEBUI_NAME=n56u_ribbon_fixed/WEBUI_NAME=n56u_rainbow/g" ./Makefile
     - name: Apply specialized logo
-      if: github.event.inputs.specializedlogo == 'true'
+      if: env.specializedlogo == 'y'
       run: |
         logoFile=
         if [ "${{ matrix.target }}" = "BELL-A040WQ" ]; then
@@ -119,7 +127,7 @@ jobs:
         fi
         if [ -n "$logoFile" ]; then
             cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_ribbon_fixed/bootstrap/img/asus_logo.png
-            if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
+            if [ "${{ env.rainbowui }}" = "y" ]; then
                 cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_blue.png
                 cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_cyan.png
                 cp -f $logoFile $WORK_PATH/trunk/user/www/n56u_rainbow/bootstrap/img/logo_green.png
@@ -130,10 +138,10 @@ jobs:
             fi
         fi
     - name: Change specialized brand logo image
-      if: github.event.inputs.changebrandlogo == 'true' && github.event.inputs.specializedlogo == 'false'
+      if: env.changebrandlogo == 'y' && env.specializedlogo == 'n'
       run: |
         cd $WORK_PATH/trunk
-        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
+        if [ "${{ env.rainbowui }}" = "y" ]; then
             sudo ./change_logo.sh ${{ matrix.target }} 0
         else
             sudo ./change_logo.sh ${{ matrix.target }}
@@ -262,7 +270,7 @@ jobs:
       id: organize
       run: |
         rainbow_Prefix=""
-        if [ "${{ github.event.inputs.rainbowui }}" = "true" ]; then
+        if [ "${{ env.rainbowui }}" = "y" ]; then
             rainbow_Prefix="rainbow_"
         fi
         mkdir -p $FIRMWARE_PATH/

@@ -1,7 +1,8 @@
 #!/bin/sh
 defaultfile=$1
 restartingfile=$2
-lanip=$3
+dicfile=$3
+lanip=$4
 oc1=${lanip%%.*}
 x=${lanip#*.*}
 oc2=${x%%.*}
