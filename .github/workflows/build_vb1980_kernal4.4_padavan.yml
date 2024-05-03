@@ -124,7 +124,7 @@ jobs:
               "model": "DIR-882"
             },
             "ZTE_E8820V2": {
-              "model": "E8820V2"
+              "model": "ZTE-E8820V2"
             },
             "Linksys_EA7500": {
               "model": "EA7500"
@@ -211,7 +211,7 @@ jobs:
               "model": "R2100"
             },
             "Netgear_R6800": {
-              "model": "R6800"
+              "model": "NETGEAR-R6800"
             },
             "Redmi_AC2100": {
               "model": "RM2100"
