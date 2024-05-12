@@ -7,57 +7,58 @@ on:
         type: choice
         description: 'target to compile'
         options:
-        - Gee_B70
-        - Nokia-Sbell_A-040W-Q
-        - Xiaomi_CR6606
-        - Xiaomi_CR6608
-        - Xiaomi_CR6609
+        - Arcadyan_WE410443-TC
+        - Asus_RT-AC85P
+        - Diting_NEWIFI3
         - DLINK_DIR-878
         - DLINK_DIR-882
-        - ZTE_E8820V2
-        - Linksys_EA7500
+        - FCJ_G-AX1800
+        - Gee_B70
         - GHL_R-001
+        - H3C_TX1801
+        - H3C_TX1806
         - Hair_HAR-20S2U1
         - JCG_836PRO
         - JCG_AC860M
-        - JCQ_Q20-PB
-        - JCQ_Q20
-        - JCQ_Q10Pro
-        - JCQ_Q11Pro
+        - JCG_Q20
+        - JCG_Q20-PB
+        - JCG_Q10Pro
+        - JCG_Q11Pro
         - JCG_Y2
-        - JDCloud_Luban
         - JDCloud_1
+        - JDCloud_Luban
+        - Lenovo_NEWIFI2
+        - Linksys_EA7500
+        - Motorola_MR2600
+        - Netgear_R6800
+        - Netgear_R7450
+        - Nokia-Sbell_A-040W-Q
+        - Phicomm_K2P
         - Phicomm_K2P-NANO
         - Phicomm_K2P-USB
-        - Phicomm_K2P
+        - QianmoBus_B1
+        - Raisecom_MSG1500_X.00
+        - Raisecom_MSG1500_Z.00
+        - Redmi_AC2100
+        - Skspruce_WIA3300-10
+        - SIM_AX1800T
         - Xiaomi_4
+        - Xiaomi_AC2100
+        - Xiaomi_CR6606
+        - Xiaomi_CR6608
+        - Xiaomi_CR6609
         - Xiaomi_R3G
+        - Xiaomi_R3P
         - Xiaomi_R3P-PB
         - Xiaomi_R3P-SPI
-        - Xiaomi_R3P
         - Xiaomi_R4A
-        - Motorola_MR2600
-        - Raisecom_MSG1500_Z.00
-        - Raisecom_MSG1500_X.00
-        - Lenovo_NEWIFI2
-        - Diting_NEWIFI3
-        - QianmoBus_B1
-        - Xiaomi_AC2100
-        - Netgear_R6800
-        - Redmi_AC2100
-        - Asus_RT-AC85P
-        - SIM_AX1800T
-        - H3C_TX1801
-        - H3C_TX1806
-        - Arcadyan_WE410443-TC
-        - Youhua_WR1200JS
-        - Youhua_WR330
         - Xiaoyu_C1
         - Xiaoyu_C3
         - Xiaoyu_C5
+        - Youhua_WR1200JS
+        - Youhua_WR330
+        - ZTE_E8820V2
         - ZTE_E8820S
-        - FCJ_G-AX1800
-        - Skspruce_WIA3300-10
         default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
@@ -102,20 +103,14 @@ jobs:
         key: "${{ github.event.inputs.target }}"
         map: |
           {
-            "Gee_B70": {
-              "model": "B70"
+            "Arcadyan_WE410443-TC": {
+              "model": "WE410443-TC"
             },
-            "Nokia-Sbell_A-040W-Q": {
-              "model": "BELL-A040WQ"
+            "Asus_RT-AC85P": {
+              "model": "RT-AC85P"
             },
-            "Xiaomi_CR6606": {
-              "model": "CR660x"
-            },
-            "Xiaomi_CR6608": {
-              "model": "CR660x"
-            },
-            "Xiaomi_CR6609": {
-              "model": "CR660x"
+            "Diting_NEWIFI3": {
+              "model": "NEWIFI3"
             },
             "DLINK_DIR-878": {
               "model": "DIR-878"
@@ -123,14 +118,20 @@ jobs:
             "DLINK_DIR-882": {
               "model": "DIR-882"
             },
-            "ZTE_E8820V2": {
-              "model": "ZTE-E8820V2"
+            "FCJ_G-AX1800": {
+              "model": "G-AX1800"
             },
-            "Linksys_EA7500": {
-              "model": "EA7500"
+            "Gee_B70": {
+              "model": "B70"
             },
             "GHL_R-001": {
               "model": "GHL"
+            },
+            "H3C_TX1801": {
+              "model": "TX1801"
+            },
+            "H3C_TX1806": {
+              "model": "TX1801"
             },
             "Hair_HAR-20S2U1": {
               "model": "HAR-20S2U1"
@@ -141,26 +142,47 @@ jobs:
             "JCG_AC860M": {
               "model": "JCG-AC860M"
             },
-            "JCQ_Q20-PB": {
+            "JCG_Q20": {
+              "model": "JCG-Q20"
+            },
+            "JCG_Q20-PB": {
               "model": "JCG-Q20-PB"
             },
-            "JCQ_Q20": {
+            "JCG_Q10Pro": {
               "model": "JCG-Q20"
             },
-            "JCQ_Q10Pro": {
-              "model": "JCG-Q20"
-            },
-            "JCQ_Q11Pro": {
+            "JCG_Q11Pro": {
               "model": "JCG-Q11Pro"
             },
             "JCG_Y2": {
               "model": "JCG-Y2"
             },
+            "JDCloud_1": {
+              "model": "JDCLOUD-RE-SP-01B"
+            },
             "JDCloud_Luban": {
               "model": "JDCLOUD-RE-CP-02"
             },
-            "JDCloud_1": {
-              "model": "JDCLOUD-RE-SP-01B"
+            "Lenovo_NEWIFI2": {
+              "model": "NEWIFI"
+            },
+            "Linksys_EA7500": {
+              "model": "EA7500"
+            },
+            "Motorola_MR2600": {
+              "model": "MR2600"
+            },
+            "Netgear_R6800": {
+              "model": "NETGEAR-R6800"
+            },
+            "Netgear_R7450": {
+              "model": "NETGEAR-R7450"
+            },
+            "Nokia-Sbell_A-040W-Q": {
+              "model": "BELL-A040WQ"
+            },
+            "Phicomm_K2P": {
+              "model": "K2P"
             },
             "Phicomm_K2P-NANO": {
               "model": "K2P-NANO"
@@ -168,14 +190,44 @@ jobs:
             "Phicomm_K2P-USB": {
               "model": "K2P-USB"
             },
-            "Phicomm_K2P": {
-              "model": "K2P"
+            "QianmoBus_B1": {
+              "model": "QM-B1"
+            },
+            "Raisecom_MSG1500_X.00": {
+              "model": "MSG1500"
+            },
+            "Raisecom_MSG1500_Z.00": {
+              "model": "MSG1500-Z"
+            },
+            "Redmi_AC2100": {
+              "model": "RM2100"
+            },
+            "Skspruce_WIA3300-10": {
+              "model": "WIA3300-10"
+            },
+            "SIM_AX1800T": {
+              "model": "SIM-AX1800T"
             },
             "Xiaomi_4": {
               "model": "MI-4"
             },
+            "Xiaomi_AC2100": {
+              "model": "R2100"
+            },
+            "Xiaomi_CR6606": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6608": {
+              "model": "CR660x"
+            },
+            "Xiaomi_CR6609": {
+              "model": "CR660x"
+            },
             "Xiaomi_R3G": {
               "model": "MI-R3G"
+            },
+            "Xiaomi_R3P": {
+              "model": "MI-R3P"
             },
             "Xiaomi_R3P-PB": {
               "model": "MI-R3P-PB"
@@ -183,59 +235,8 @@ jobs:
             "Xiaomi_R3P-SPI": {
               "model": "MI-R3P-SPI"
             },
-            "Xiaomi_R3P": {
-              "model": "MI-R3P"
-            },
             "Xiaomi_R4A": {
               "model": "MI-R4A"
-            },
-            "Motorola_MR2600": {
-              "model": "MR2600"
-            },
-            "Raisecom_MSG1500_Z.00": {
-              "model": "MSG1500-Z"
-            },
-            "Raisecom_MSG1500_X.00": {
-              "model": "MSG1500"
-            },
-            "Lenovo_NEWIFI2": {
-              "model": "NEWIFI"
-            },
-            "Diting_NEWIFI3": {
-              "model": "NEWIFI3"
-            },
-            "QianmoBus_B1": {
-              "model": "QM-B1"
-            },
-            "Xiaomi_AC2100": {
-              "model": "R2100"
-            },
-            "Netgear_R6800": {
-              "model": "NETGEAR-R6800"
-            },
-            "Redmi_AC2100": {
-              "model": "RM2100"
-            },
-            "Asus_RT-AC85P": {
-              "model": "RT-AC85P"
-            },
-            "SIM_AX1800T": {
-              "model": "SIM-AX1800T"
-            },
-            "H3C_TX1801": {
-              "model": "TX1801"
-            },
-            "H3C_TX1806": {
-              "model": "TX1801"
-            },
-            "Arcadyan_WE410443-TC": {
-              "model": "WE410443-TC"
-            },
-            "Youhua_WR1200JS": {
-              "model": "WR1200JS"
-            },
-            "Youhua_WR330": {
-              "model": "WR1200JS"
             },
             "Xiaoyu_C1": {
               "model": "XY-C1"
@@ -246,14 +247,17 @@ jobs:
             "Xiaoyu_C5": {
               "model": "XY-C1"
             },
+            "Youhua_WR1200JS": {
+              "model": "WR1200JS"
+            },
+            "Youhua_WR330": {
+              "model": "WR1200JS"
+            },
+            "ZTE_E8820V2": {
+              "model": "ZTE-E8820V2"
+            },
             "ZTE_E8820S": {
               "model": "ZTE-E8820S"
-            },
-            "FCJ_G-AX1800": {
-              "model": "G-AX1800"
-            },
-            "Skspruce_WIA3300-10": {
-              "model": "WIA3300-10"
             },
             ".*": {
               "model": "K2P"
@@ -284,10 +288,10 @@ jobs:
         sed -i '/cp -f/d' Makefile
     - name: Extract toolchain
       run: |
-        cp -f toolchain/mipsel-linux-uclibc-gcc10.tar.xz $WORK_PATH
+        cp -f toolchain/mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz $WORK_PATH
         cd $WORK_PATH
         mkdir -p toolchain-mipsel/toolchain-4.4.x
-        tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
+        tar -Jxvf mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz -C toolchain-mipsel/toolchain-4.4.x
     - name: Parse json string of customization configs
       run: |
         echo "rainbowui=${{fromJson(github.event.inputs.customization).rainbowui}}" >> $GITHUB_ENV

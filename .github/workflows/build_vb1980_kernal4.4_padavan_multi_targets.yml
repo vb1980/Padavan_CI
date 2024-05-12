@@ -73,10 +73,10 @@ jobs:
         sed -i '/cp -f/d' Makefile
     - name: Extract toolchain
       run: |
-        cp -f toolchain/mipsel-linux-uclibc-gcc10.tar.xz $WORK_PATH
+        cp -f toolchain/mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz $WORK_PATH
         cd $WORK_PATH
         mkdir -p toolchain-mipsel/toolchain-4.4.x
-        tar -Jxvf mipsel-linux-uclibc-gcc10.tar.xz -C toolchain-mipsel/toolchain-4.4.x
+        tar -Jxvf mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz -C toolchain-mipsel/toolchain-4.4.x
     - name: Parse json string of customization configs
       run: |
         echo "rainbowui=${{fromJson(github.event.inputs.customization).rainbowui}}" >> $GITHUB_ENV

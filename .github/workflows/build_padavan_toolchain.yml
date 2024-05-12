@@ -1,0 +1,33 @@
+name: build padavan toolchain
+
+on: 
+  workflow_dispatch:
+env:
+  REPOSITORY_URL: https://github.com/vb1980/padavan-4.4.git
+  WORK_PATH: /opt/padavan-4.4
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare environment
+        run: |
+          sudo apt update
+          sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
+            fakeroot kmod cpio git python3-docutils gettext automake autopoint \
+            texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
+            libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+      - name: Clone source code
+        run: |
+          git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+      - name: Start Build
+        run: |
+          cd $WORK_PATH
+          make toolchain/build
+          cd toolchain-mipsel/toolchain-4.4.x
+          tar cJf ../mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz *
+      - uses: actions/upload-artifact@main
+        with:
+          name: toolchain
+          path: ${{ env.WORK_PATH }}/toolchain-mipsel/mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz
