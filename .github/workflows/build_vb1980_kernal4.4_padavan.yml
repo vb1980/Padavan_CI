@@ -7,6 +7,8 @@ on:
         type: choice
         description: 'target to compile'
         options:
+        - 360_T6M
+        - 360_T6M-PB
         - Arcadyan_WE410443-TC
         - Asus_RT-AC85P
         - Diting_NEWIFI3
@@ -103,6 +105,12 @@ jobs:
         key: "${{ github.event.inputs.target }}"
         map: |
           {
+            "360_T6M": {
+              "model": "360-T6M"
+            },
+            "360_T6M-PB": {
+              "model": "360-T6M-PB"
+            },
             "Arcadyan_WE410443-TC": {
               "model": "WE410443-TC"
             },
