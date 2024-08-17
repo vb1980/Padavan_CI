@@ -14,3 +14,4 @@ sed -i "s/\"192.168.2.1\"/\"$lanip\"/g" $defaultfile
 sed -i "s/\"192.168.2.100\"/\"$dhcpfrom\"/g" $defaultfile
 sed -i "s/\"192.168.2.244\"/\"$dhcpto\"/g" $defaultfile
 sed -i "s/192.168.2.1/$lanip/" $restartingfile
+sed -i "s/192.168.2.1/$lanip/" $dicfile
