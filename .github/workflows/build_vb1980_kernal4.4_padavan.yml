@@ -14,7 +14,8 @@ on:
         - Diting_NEWIFI3
         - DLINK_DIR-878
         - DLINK_DIR-882
-        - FCJ_G-AX1800
+        - FCJ_G-AX1800_Black
+        - FCJ_G-AX1800_White
         - Gee_B70
         - GHL_R-001
         - H3C_TX1801
@@ -126,7 +127,10 @@ jobs:
             "DLINK_DIR-882": {
               "model": "DIR-882"
             },
-            "FCJ_G-AX1800": {
+            "FCJ_G-AX1800_Black": {
+              "model": "G-AX1800-B"
+            },
+            "FCJ_G-AX1800_White": {
               "model": "G-AX1800"
             },
             "Gee_B70": {
