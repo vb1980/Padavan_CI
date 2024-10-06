@@ -11,6 +11,7 @@ on:
         - 360_T6M-PB
         - Arcadyan_WE410443-TC
         - Asus_RT-AC85P
+        - C-Life_XG1
         - Diting_NEWIFI3
         - DLINK_DIR-878
         - DLINK_DIR-882
@@ -26,6 +27,7 @@ on:
         - JCG_Q20
         - JCG_Q20-PB
         - JCG_Q10Pro
+        - JCG_Q10Pro-PB
         - JCG_Q11Pro
         - JCG_Y2
         - JDCloud_1
@@ -62,6 +64,7 @@ on:
         - Youhua_WR330
         - ZTE_E8820V2
         - ZTE_E8820S
+        - ZTT_RX6000
         default: SIM_AX1800T
       plugins:
         description: 'json format string of include configs'
@@ -118,6 +121,9 @@ jobs:
             "Asus_RT-AC85P": {
               "model": "RT-AC85P"
             },
+            "C-Life_XG1": {
+              "model": "C-Life-XG1"
+            },
             "Diting_NEWIFI3": {
               "model": "NEWIFI3"
             },
@@ -161,7 +167,10 @@ jobs:
               "model": "JCG-Q20-PB"
             },
             "JCG_Q10Pro": {
-              "model": "JCG-Q20"
+              "model": "JCG-Q10Pro"
+            },
+            "JCG_Q10Pro-PB": {
+              "model": "JCG-Q10Pro-PB"
             },
             "JCG_Q11Pro": {
               "model": "JCG-Q11Pro"
@@ -271,6 +280,9 @@ jobs:
             "ZTE_E8820S": {
               "model": "ZTE-E8820S"
             },
+            "ZTT_RX6000": {
+              "model": "ZTT-RX6000"
+            },
             ".*": {
               "model": "K2P"
             }
@@ -279,7 +291,7 @@ jobs:
         mode: first_match
     - uses: actions/setup-go@v5
       with:
-        go-version: '1.22.0'
+        go-version: '1.23.0'
         check-latest: true
         cache-dependency-path: '**/go.sum'
     - name: Initialization environment
