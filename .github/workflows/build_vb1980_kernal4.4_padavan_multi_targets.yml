@@ -61,7 +61,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
-        fakeroot kmod cpio git python3-docutils gettext automake autopoint \
+        fakeroot kmod cpio git python3-docutils gettext automake liblzma-dev autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin libev-dev ccache \
         libssl-dev liblzo2-dev libpam0g-dev
@@ -73,10 +73,10 @@ jobs:
         sed -i '/cp -f/d' Makefile
     - name: Extract toolchain
       run: |
-        cp -f toolchain/mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz $WORK_PATH
+        cp -f toolchain/mipsel-linux-uclibc-gcc10-uClibcng1052.tar.xz $WORK_PATH
         cd $WORK_PATH
         mkdir -p toolchain-mipsel/toolchain-4.4.x
-        tar -Jxvf mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz -C toolchain-mipsel/toolchain-4.4.x
+        tar -Jxvf mipsel-linux-uclibc-gcc10-uClibcng1052.tar.xz -C toolchain-mipsel/toolchain-4.4.x
     - name: Parse json string of customization configs
       run: |
         echo "rainbowui=${{fromJson(github.event.inputs.customization).rainbowui}}" >> $GITHUB_ENV
