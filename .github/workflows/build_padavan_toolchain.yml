@@ -26,8 +26,8 @@ jobs:
           cd $WORK_PATH
           make toolchain/build
           cd toolchain-mipsel/toolchain-4.4.x
-          tar cJf ../mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz *
+          tar cJf ../mipsel-linux-uclibc-gcc10-uClibcng1052.tar.xz *
       - uses: actions/upload-artifact@main
         with:
           name: toolchain
-          path: ${{ env.WORK_PATH }}/toolchain-mipsel/mipsel-linux-uclibc-gcc10-uClibcng1048.tar.xz
+          path: ${{ env.WORK_PATH }}/toolchain-mipsel/mipsel-linux-uclibc-gcc10-uClibcng1052.tar.xz

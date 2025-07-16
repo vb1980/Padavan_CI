@@ -32,6 +32,7 @@ on:
         - JCG_Y2
         - JDCloud_1
         - JDCloud_Luban
+        - KONKA_KOMI-A8
         - Lenovo_NEWIFI2
         - Linksys_EA7500
         - Motorola_MR2600
@@ -97,12 +98,12 @@ env:
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - uses: actions/checkout@v4
-    - uses: hendrikmuhs/ccache-action@v1.2.12
+    - uses: hendrikmuhs/ccache-action@v1.2.18
     - uses: Bonnie2980/variable-mapper@master
       id: export
       with:
@@ -183,6 +184,9 @@ jobs:
             },
             "JDCloud_Luban": {
               "model": "JDCLOUD-RE-CP-02"
+            },
+            "KONKA_KOMI-A8": {
+              "model": "KOMI-A8"
             },
             "Lenovo_NEWIFI2": {
               "model": "NEWIFI"
@@ -291,7 +295,7 @@ jobs:
         mode: first_match
     - uses: actions/setup-go@v5
       with:
-        go-version: '1.23.0'
+        go-version: '1.24.x'
         check-latest: true
         cache-dependency-path: '**/go.sum'
     - name: Initialization environment

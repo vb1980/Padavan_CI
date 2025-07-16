@@ -34,7 +34,7 @@ env:
   FIRMWARE_PATH: /opt/firmwares
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
     
     strategy:
@@ -44,14 +44,14 @@ jobs:
         
     steps:
     - uses: actions/checkout@v4
-    - uses: hendrikmuhs/ccache-action@v1.2.12
+    - uses: hendrikmuhs/ccache-action@v1.2.18
       with:
         key: ${{ matrix.target }}
         append-timestamp: false
         
     - uses: actions/setup-go@v5
       with:
-        go-version: '1.23.0'
+        go-version: '1.24.x'
         check-latest: true
         cache-dependency-path: '**/go.sum'
         
